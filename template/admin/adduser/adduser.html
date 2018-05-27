@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+<title>User registration</title>
+<style>
+        input[type=text], input[type=number], select {
+            width: 100%;
+            padding: 10px 15px;
+            margin: 5px 0;
+            display: inline;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        button[type=submit] {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button[type=submit]:hover {
+            background-color: #45a049;
+        }
+        
+        div {
+            border-radius: 3px;
+            background-color: #f2f2f2;
+            padding: 10px;
+        }
+        </style>
+
+<style type="text/css">.error {color: red;}</style>
+
+</head>
+
+<ul>
+    <li style="display:inline-block;">
+       <p><a href="../">Home</a></p> 
+    </li>
+    <li style="display:inline-block; padding-left: 10px;">
+        <p><a href="../admin" >Approve or reject purchase requests</a></p>
+    </li>
+</ul>
+
+    <h1>Register new user</h1>
+    <div>
+        <p class="error" >{{ .Error }}</p>
+    </div>
+
+    <form action="/admin/adduser" id="adduser" method="post">
+
+        Email:<input type="text" name="email" value="{{ .Email }}" required>
+        Name:<input type="text" name="name" value="{{ .Name }}" required>
+        
+        <button type="submit"> Submit </button>
+      </form>
+      
+
+
+</body>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+<title>Purchase Request</title>
+<style>
+        input[type=text], input[type=number], select {
+            width: 100%;
+            padding: 10px 15px;
+            margin: 5px 0;
+            display: inline;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        button[type=submit] {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button[type=submit]:hover {
+            background-color: #45a049;
+        }
+        
+        div {
+            border-radius: 3px;
+            background-color: #f2f2f2;
+            padding: 10px;
+        }
+        </style>
+
+<style type="text/css">.error {color: red;}</style>
+
+</head>
+
+<ul>
+<li style="display:inline-block;">
+<p><a href="../">Home</a></p> 
+</li>
+</ul>
+
+    <h1>Purchase Request</h1>
+    <div>
+        <p class="error" >{{ .Error }}</p>
+    </div>
+
+    <form action="/purchaserequest" id="purchaserequest" method="post">
+        Cost Center:<select name="costCenter" form="purchaserequest" required>
+                <option value=""></option>
+                <option selected="selected">{{ .CostCenter }}</option>
+                <option value="Receiving">Receiving</option>
+                <option value="Inbound">Inbound</option>
+                <option value="Picking">Picking</option>
+                <option value="Packing">Packing</option>
+                <option value="Packaging">Packaging</option>
+                <option value="Troubleshooting">Troubleshooting</option>
+                <option value="Tehran Dispatch">Tehran Dispatch</option>
+                <option value="Shahrestan Dispatch">Shahrestan Dispatch</option>
+                <option value="Hub-to-hub Logistics">Hub-to-hub Logistics</option>
+                <option value="RTS">RTS</option>
+                <option value="RFC">RFC</option>
+                <option value="Administration">Administration</option>
+                <option value="FBB">FBB</option>
+                <option value="Logistics">Logistics</option>
+                <option value="Reverse">Reverse</option>
+                <option value="Planning and Budgeting">Planning and Budgeting</option>
+                <option value="Warehouse Management">Warehouse Management</option>
+                </select>
+        Initiator:<select name="initiator" form="purchaserequest" required>
+                <option value=""></option>
+                <option selected="selected">{{ .Initiator }}</option>
+                <option value="Mehdi Sarkhosh">Mehdi Sarkhosh</option>
+                <option value="Sahand Esmaeili">Hamed Birjantalab</option>
+                <option value="Vahid Delkhahi">Vahid Delkhahi</option>
+                <option value="Ali Sadeghi">Ali Sadeghi</option>
+                <option value="Saeed Nasouti">Saeed Nasouti</option>
+                <option value="Omid Hasirbafan">Omid Hasirbafan</option>
+                <option value="Omid Delkhahi">Omid Delkhahi</option>
+                <option value="Mehdi Malek">Mehdi Malek</option>
+                <option value="Kamelia Navaei">Kamelia Navaei</option>
+                <option value="Ashutosh Gaur">Ashutosh Gaur</option>
+                <option value="Hossein Entekhabi">Hossein Entekhabi</option>
+                <option value="Julien Lefebvre">Julien Lefebvre</option>
+                <option value="Vahid Laalipour">Vahid Laalipour</option>
+                <option value="Raha Molaei">Raha Molaei</option>        
+                </select>
+        PR Type:<select name="prType" form="purchaserequest" required>
+                <option value=""></option>
+                <option selected="selected">{{ .PrType }}</option>
+                <option value="Quantitative">Quantitative</option>
+                <option value="Non-Quantitative">Non-Quantitative</option>
+                </select>
+        Cost Category:<select name="costCategory" form="purchaserequest" required>
+                <option value=""></option>
+                <option selected="selected">{{ .CostCategory }}</option>
+                <option value="Utilities">Utilities</option>
+                <option value="Packaging Materials">Packaging Materials</option>
+                <option value="Fulfillment Materials">Non-Quantitative</option>
+                <option value="Accessories">Non-Quantitative</option>
+                <option value="F&amp;B">F&amp;B</option>
+                <option value="General Items">General Items</option>
+                </select>
+        Invoice Number:<input type="text" name="invoiceNumber" value="{{ .InvoiceNumber }}" required>
+        Invoice Date:<select name="invoiceDate" form="purchaserequest" required>
+                <option value=""></option>
+                <option selected="selected">{{ .InvoiceDate }}</option>
+        </select>
+        Vendor Name:<input type="text" name="vendorName" value="{{ .VendorName }}" required>
+        Item Description:<input type="text" name="itemDescription" value="{{ .ItemDescription }}" required>
+        Unit Price IRR:<input type="number" step="0.01" min=0 name="unitPrice" value="{{ .UnitPrice }}" required>
+        VAT Unit Price IRR:<input type="number" step="0.01" min=0 name="vatUnitPrice" value="{{ .VatUnitPrice }}" required>
+        Quantity:<input type="number" step="1" min=0 name="quantity" value="{{ .Quantity }}" required>
+        Payment Term in Days:<select name="paymentTerm" form="purchaserequest" required>
+                <option value=""></option>
+                <option selected="selected">{{ .PaymentTerm }}</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="30">30</option>
+                <option value="45">45</option>
+                <option value="60">60</option>
+                <option value="75">75</option>
+                <option value="90">90</option>
+            </select>
+        Payment Center:<select name="paymentCenter" form="purchaserequest" required>
+            <option value=""></option>
+            <option selected="selected">{{ .PaymentCenter }}</option>
+            <option value="Head Office">Head Office</option>
+            <option value="Operations">Operations</option>
+            </select>
+        Already Paid?<select name="alreadyPaid" form="purchaserequest" required>
+            <option value=""></option>
+            <option selected="selected">{{ .AlreadyPaid }}</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+            </select>
+        Payment Type:<select name="paymentType" form="purchaserequest" required>
+                <option value=""></option>
+                <option selected="selected">{{ .PaymentType }}</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+                <option value="Cash">Cash</option>
+                <option value="Card-to-Card Transfer">Card-to-Card Transfer</option>
+                <option value="Online Banking">Online Banking</option>
+                </select>
+        <button type="submit"> Submit </button>
+      </form>
+      
+      <script>
+
+      invoiceDateSelectElement = document.querySelector("#purchaserequest > select:nth-child(6)")
+      fetch("/purchaserequest/startforminvoicedate")
+      .then(invoiceDateTableByte => invoiceDateTableByte.json())
+      .then(invoiceDateTableJSON => {
+        //Once we fetch the list, we iterate over it
+        invoiceDateTableJSON.forEach(invoiceDate => {
+
+          // create the <option> element and fill it
+          invoiceDateOptionElement = document.createElement("option")
+          invoiceDateOptionElement.value = invoiceDate
+          invoiceDateOptionElement.innerHTML = invoiceDate
+
+          // Finally, add the option element to the select element itself
+          invoiceDateSelectElement.appendChild(invoiceDateOptionElement)
+        })
+      })
+
+  </script>
+
+</body>

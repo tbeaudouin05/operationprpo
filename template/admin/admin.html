@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <style>
+
+  table tr:nth-child(even) {
+  background-color: #eee;
+  }
+  tr:nth-child(odd) {
+    background-color: #fff;
+  }  
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 5px;
+    }
+    th, td {
+        text-align: center;
+    }
+
+    input[type=text], input[type=number], select {
+            width: 100%;
+            padding: 10px 15px;
+            margin: 5px 0;
+            display: inline;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        button[type=submit] {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button[type=submit]:hover {
+            background-color: #45a049;
+        }
+        
+        div {
+            border-radius: 3px;
+            background-color: #f2f2f2;
+            padding: 10px;
+        }
+    </style>
+ <title>Pending Purchase Requests</title>
+</head>
+
+<body>
+    <ul>
+        <li style="display:inline-block;">
+           <p><a href="../">Home</a></p> 
+        </li>
+        <li style="display:inline-block; padding-left: 10px;">
+            <p><a href="../admin/adduser" >Add user</a></p>
+        </li>
+    </ul>
+  <h1>Pending Purchase Requests</h1>
+  <form action="/admin" id="admin" method="post">
+  ID of Purchase Request:<select name="iDPurchaseRequest" form="admin">
+      <option value=""></option>
+      </select>
+  Accept or Reject? <select name="acceptReject" form="admin">
+      <option value=""></option>
+      <option value="Accept">Accept</option>
+      <option value="Reject">Reject</option>
+      </select>
+  <button type="submit"> Submit </button>
+  </form>
+  <!-- 
+    This section of the document specifies the table that will
+    be used to display the list of birds and their description
+   -->
+  <table>
+    <tr>
+      <th>ID Purchase Request</th>
+      <th>Cost Center</th>
+			<th>Initiator</th>
+			<th>PR Type</th>
+			<th>Cost Category</th>
+			<th>Invoice Number</th>
+			<th>Invoice Date</th>
+			<th>Vendor Name</th>	
+			<th>Item Description</th>
+			<th>Unit Price IRR</th>
+			<th>VAT Unit Price IRR</th>
+			<th>Quantity</th>
+			<th>Payment Term</th>
+			<th>Payment Center</th>
+			<th>Already Paid</th>
+      <th>Payment Type</th>
+      <th>Invoice Total IRR</th>
+      <th>VAT Invoice Total IRR</th>
+    </tr>
+  </table>
+
+  <!-- 
+    Finally, the last section is the script that will
+    run on each page load to fetch the list of birds
+    and add them to our existing table
+   -->
+  <script>
+
+iDPurchaseRequestSelectElement = document.querySelector("#admin > select:nth-child(1)")
+      fetch("/admin/startformidpurchaserequest")
+      .then(iDPurchaseRequestTableByte => iDPurchaseRequestTableByte.json())
+      .then(iDPurchaseRequestTableJSON => {
+        //Once we fetch the list, we iterate over it
+        iDPurchaseRequestTableJSON.forEach(iDPurchaseRequest => {
+
+          // create the <option> element and fill it
+          iDPurchaseRequestOptionElement = document.createElement("option")
+          iDPurchaseRequestOptionElement.value = iDPurchaseRequest
+          iDPurchaseRequestOptionElement.innerHTML = iDPurchaseRequest
+
+          // Finally, add the option element to the select element itself
+          iDPurchaseRequestSelectElement.appendChild(iDPurchaseRequestOptionElement)
+        })
+      })
+
+
+
+    purchaseRequestTable = document.querySelector("table")
+    fetch("/admin/startpendingpurchaserequest")
+      .then(response => response.json())
+      .then(templateParameterTable => {
+        //Once we fetch the list, we iterate over it
+        templateParameterTable.forEach(templateParameter => {
+          // Create the table row
+          row = document.createElement("tr")
+          // Create the table data elements for the species and
+					// description columns
+          id_purchase_request = document.createElement("td")
+          id_purchase_request.innerHTML = templateParameter.id_purchase_request
+          cost_center = document.createElement("td")
+          cost_center.innerHTML = templateParameter.cost_center
+          initiator = document.createElement("td")
+          initiator.innerHTML = templateParameter.initiator
+          pr_type = document.createElement("td")
+          pr_type.innerHTML = templateParameter.pr_type
+          cost_category = document.createElement("td")
+          cost_category.innerHTML = templateParameter.cost_category
+          invoice_number = document.createElement("td")
+          invoice_number.innerHTML = templateParameter.invoice_number
+          invoice_date = document.createElement("td")
+          invoice_date.innerHTML = templateParameter.invoice_date
+          vendor_name = document.createElement("td")
+          vendor_name.innerHTML = templateParameter.vendor_name
+          item_description = document.createElement("td")
+          item_description.innerHTML = templateParameter.item_description
+          unit_price = document.createElement("td")
+          unit_price.innerHTML = templateParameter.unit_price
+          vat_unit_price = document.createElement("td")
+          vat_unit_price.innerHTML = templateParameter.vat_unit_price
+          quantity = document.createElement("td")
+          quantity.innerHTML = templateParameter.quantity
+          payment_term = document.createElement("td")
+          payment_term.innerHTML = templateParameter.payment_term
+          payment_center = document.createElement("td")
+          payment_center.innerHTML = templateParameter.payment_center
+          already_paid = document.createElement("td")
+          already_paid.innerHTML = templateParameter.already_paid
+          payment_type = document.createElement("td")
+          payment_type.innerHTML = templateParameter.payment_type
+          invoice_total = document.createElement("td")
+          invoice_total.innerHTML = templateParameter.invoice_total
+          vat_invoice_total = document.createElement("td")
+          vat_invoice_total.innerHTML = templateParameter.vat_invoice_total
+
+          // Add the data elements to the row
+          row.appendChild(id_purchase_request)
+          row.appendChild(cost_center)
+          row.appendChild(initiator)
+          row.appendChild(pr_type)
+          row.appendChild(cost_category)
+          row.appendChild(invoice_number)
+          row.appendChild(invoice_date)
+          row.appendChild(vendor_name)
+          row.appendChild(item_description)
+          row.appendChild(unit_price)
+          row.appendChild(vat_unit_price)
+          row.appendChild(quantity)
+          row.appendChild(payment_term)
+          row.appendChild(payment_center)
+          row.appendChild(already_paid)
+          row.appendChild(payment_type)
+          row.appendChild(invoice_total)
+          row.appendChild(vat_invoice_total)
+          // Finally, add the row element to the table itself
+          purchaseRequestTable.appendChild(row)
+        })
+      })
+  </script>
+</body>
