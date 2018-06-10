@@ -55,7 +55,7 @@ func main() {
 	router.POST(`/admin/addlocation`, addcostcenter.AnswerLocationForm)
 	router.GET(`/admin/addcostcenterconfirmation`, addcostcenter.ConfirmForm)
 
-	router.Run(`192.168.100.160.xip.io:8080`)
+	router.Run(`127.0.0.1:8080`)
 }
 
 // randToken returns a random token of i bytes
