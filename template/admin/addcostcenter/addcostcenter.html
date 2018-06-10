@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+<title>Cost Center registration</title>
+<style>
+        input[type=text], input[type=number], select {
+            width: 100%;
+            padding: 10px 15px;
+            margin: 5px 0;
+            display: inline;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        button[type=submit] {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button[type=submit]:hover {
+            background-color: #45a049;
+        }
+        
+        div {
+            border-radius: 3px;
+            background-color: #f2f2f2;
+            padding: 10px;
+        }
+        </style>
+
+<style type="text/css">.error {color: red;}</style>
+
+</head>
+
+<ul>
+    <li style="display:inline-block;">
+       <p><a href="../">Home</a></p> 
+    </li>
+    <li style="display:inline-block; padding-left: 10px;">
+        <p><a href="../admin" >Approve or reject purchase requests</a></p>
+    </li>
+</ul>
+
+    <h1>Register new cost center</h1>
+    <div>
+        <p class="error" >{{ .Error }}</p>
+    </div>
+
+    <form action="/admin/addcostcenter" id="addcostcenter" method="post">
+        Department GID:<select id="GIDDepartment" name="GIDDepartment" form="addcostcenter" required>
+            <option value=""></option>
+            <option selected="selected">{{ .GIDDepartment }}</option>
+                    </select>
+        Function Name:<input type="text" name="FunctionName" pattern="[0-9]{3}" title="3 digits" value="{{ .FunctionName }}" required>
+        
+        <button type="submit"> Submit </button>
+      </form>
+
+      <h1>Register new department</h1>
+      <div>
+          <p class="error" >{{ .Error }}</p>
+      </div>
+  
+      <form action="/admin/adddepartment" id="adddepartment" method="post">
+          Location GID:<select id="GIDLocation" name="GIDLocation" form="adddepartment" required>
+              <option value=""></option>
+              <option selected="selected">{{ .GIDLocation }}</option>
+                      </select>
+          Department Name:<input type="text" name="DepartmentName" pattern="[0-9]{2}" title="2 digits" value="{{ .DepartmentName }}" required>
+          
+          <button type="submit"> Submit </button>
+        </form>
+
+        <h1>Register new location</h1>
+        <div>
+            <p class="error" >{{ .Error }}</p>
+        </div>
+    
+        <form action="/admin/addlocation" id="addlocation" method="post">
+            Division GID:<select id="GIDDivision" name="GIDDivision" form="addlocation" required>
+                <option value=""></option>
+                <option selected="selected">{{ .GIDDivision }}</option>
+                        </select>
+            Location Name:<input type="text" name="LocationName" pattern="[0-9]{2}" title="2 digits" value="{{ .LocationName }}" required>
+            
+            <button type="submit"> Submit </button>
+          </form>
+      
+
+
+</body>

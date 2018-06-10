@@ -13,6 +13,32 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func AuthorizeCcAdmin(c *gin.Context, user *useraccess.User) {
+
+	session := sessions.Default(c)
+	userEmail := session.Get("userEmail")
+	if userEmail == nil {
+		http.Redirect(c.Writer, c.Request, `/login`, http.StatusSeeOther)
+		return
+	}
+
+	user.Email = userEmail.(string)
+
+	dbBaa := connectdb.ConnectToBaa()
+	defer dbBaa.Close()
+	baainteract.GetUserInfo(user, dbBaa)
+	if user.Access != `cc_admin` && user.Access != `admin` {
+		session.Set("unauthorized", "You need an admin account to access this web page!")
+		err := session.Save()
+		handleErr(c, err)
+		http.Redirect(c.Writer, c.Request, `/`, http.StatusSeeOther)
+		return
+	}
+
+	session.Set("userName", user.Name)
+
+}
+
 func AuthorizePrAdmin(c *gin.Context, user *useraccess.User) {
 
 	session := sessions.Default(c)
@@ -27,7 +53,7 @@ func AuthorizePrAdmin(c *gin.Context, user *useraccess.User) {
 	dbBaa := connectdb.ConnectToBaa()
 	defer dbBaa.Close()
 	baainteract.GetUserInfo(user, dbBaa)
-	if user.Access != `pr_admin` && user.Access != `admin` {
+	if user.Access != `pr_admin` && user.Access != `cc_admin` && user.Access != `admin` {
 		session.Set("unauthorized", "You need an admin account to access this web page!")
 		err := session.Save()
 		handleErr(c, err)

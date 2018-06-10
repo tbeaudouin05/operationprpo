@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/thomas-bamilo/operation/operationprpo/api/admin"
+	"github.com/thomas-bamilo/operation/operationprpo/api/admin/addcostcenter"
 	"github.com/thomas-bamilo/operation/operationprpo/api/admin/adduser"
 	"github.com/thomas-bamilo/operation/operationprpo/api/homepage"
 	"github.com/thomas-bamilo/operation/operationprpo/api/oauth/authenticate"
@@ -47,6 +48,12 @@ func main() {
 	router.GET(`/admin/adduser`, adduser.Start)
 	router.POST(`/admin/adduser`, adduser.AnswerForm)
 	router.GET(`/admin/adduserconfirmation`, adduser.ConfirmForm)
+
+	router.GET(`/admin/addcostcenter`, addcostcenter.Start)
+	router.POST(`/admin/addcostcenter`, addcostcenter.AnswerCostCenterForm)
+	router.POST(`/admin/adddepartment`, addcostcenter.AnswerDepartmentForm)
+	router.POST(`/admin/addlocation`, addcostcenter.AnswerLocationForm)
+	router.GET(`/admin/addcostcenterconfirmation`, addcostcenter.ConfirmForm)
 
 	router.Run(`192.168.100.160.xip.io:8080`)
 }
