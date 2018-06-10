@@ -59,21 +59,21 @@ func AnswerForm(c *gin.Context) {
 	// since we want to validate these values and upload them to database
 	// in case validation fails, we also want to return these values to the form for good user experience
 	purchaseRequestFormInput := &purchaserequestforminput.PurchaseRequestFormInput{
-		CostCenter:      r.FormValue(`costCenter`),
-		Initiator:       r.FormValue(`initiator`),
-		PrType:          r.FormValue(`prType`),
-		CostCategory:    r.FormValue(`costCategory`),
-		InvoiceNumber:   r.FormValue(`invoiceNumber`),
-		InvoiceDate:     r.FormValue(`invoiceDate`),
-		VendorName:      r.FormValue(`vendorName`),
-		ItemDescription: r.FormValue(`itemDescription`),
-		UnitPrice:       r.FormValue(`unitPrice`),
-		VatUnitPrice:    r.FormValue(`vatUnitPrice`),
-		Quantity:        r.FormValue(`quantity`),
-		PaymentTerm:     r.FormValue(`paymentTerm`),
-		PaymentCenter:   r.FormValue(`paymentCenter`),
-		AlreadyPaid:     r.FormValue(`alreadyPaid`),
-		PaymentType:     r.FormValue(`paymentType`),
+		CostCenter:         r.FormValue(`costCenter`),
+		Initiator:          r.FormValue(`initiator`),
+		PrType:             r.FormValue(`prType`),
+		CostCategory:       r.FormValue(`costCategory`),
+		InvoiceNumber:      r.FormValue(`invoiceNumber`),
+		InvoiceDate:        r.FormValue(`invoiceDate`),
+		VendorName:         r.FormValue(`vendorName`),
+		ItemDescription:    r.FormValue(`itemDescription`),
+		UnitPrice:          r.FormValue(`unitPrice`),
+		VatUnitPrice:       r.FormValue(`vatUnitPrice`),
+		Quantity:           r.FormValue(`quantity`),
+		PaymentTerm:        r.FormValue(`paymentTerm`),
+		PaymentInstallment: r.FormValue(`paymentInstallment`),
+		PaymentCenter:      r.FormValue(`paymentCenter`),
+		PaymentType:        r.FormValue(`paymentType`),
 	}
 
 	// Validate validates the purchaseRequestFormInput form user inputs

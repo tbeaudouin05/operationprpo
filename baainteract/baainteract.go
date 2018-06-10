@@ -25,8 +25,8 @@ INSERT INTO baa_application.operation.purchase_request (
 	,vat_unit_price  
 	,quantity  
 	,payment_term  
-	,payment_center  
-	,already_paid  
+	,payment_installment
+	,payment_center   
 	,payment_type
 	,purchase_request_status) 
 VALUES (@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9,@p10,@p11,@p12,@p13,@p14,@p15,'pending')`
@@ -45,8 +45,8 @@ VALUES (@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9,@p10,@p11,@p12,@p13,@p14,@p15,'pendi
 		purchaseRequestFormInput.VatUnitPrice,
 		purchaseRequestFormInput.Quantity,
 		purchaseRequestFormInput.PaymentTerm,
+		purchaseRequestFormInput.PaymentInstallment,
 		purchaseRequestFormInput.PaymentCenter,
-		purchaseRequestFormInput.AlreadyPaid,
 		purchaseRequestFormInput.PaymentType,
 	)
 
@@ -91,9 +91,9 @@ func GetPendingPurchaseRequest(dbBaa *sql.DB) []*purchaserequestforminput.Purcha
     	,CAST(ROUND(pr.unit_price ,2) as numeric(36,2)) unit_price
 		,CAST(ROUND(pr.vat_unit_price ,2) as numeric(36,2)) vat_unit_price
 		,pr.quantity
-		,pr.payment_term  
+		,pr.payment_term 
+		,pr.payment_installment 
 		,pr.payment_center  
-		,pr.already_paid
 		,pr.payment_type 
     	,CAST(ROUND(pr.invoice_total ,2) as numeric(36,2)) invoice_total
 		,CAST(ROUND(pr.vat_invoice_total ,2) as numeric(36,2)) vat_invoice_total
@@ -125,8 +125,8 @@ func GetPendingPurchaseRequest(dbBaa *sql.DB) []*purchaserequestforminput.Purcha
 			&purchaseRequestFormInput.VatUnitPrice,
 			&purchaseRequestFormInput.Quantity,
 			&purchaseRequestFormInput.PaymentTerm,
+			&purchaseRequestFormInput.PaymentInstallment,
 			&purchaseRequestFormInput.PaymentCenter,
-			&purchaseRequestFormInput.AlreadyPaid,
 			&purchaseRequestFormInput.PaymentType,
 			&purchaseRequestFormInput.InvoiceTotal,
 			&purchaseRequestFormInput.VatInvoiceTotal)

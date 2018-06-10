@@ -12,8 +12,8 @@
   ,vat_unit_price  REAL
   ,quantity  INTEGER
   ,payment_term  VARCHAR(50)
+  ,payment_installment  VARCHAR(50)
   ,payment_center  VARCHAR(50)
-  ,already_paid  VARCHAR(5)
   ,payment_type  VARCHAR(50)
   ,invoice_total AS unit_price*quantity
   ,vat_invoice_total AS vat_unit_price*quantity
@@ -43,3 +43,5 @@ DELETE FROM baa_application.operation.user_access;
 
 DROP TABLE baa_application.operation.purchase_request;
 DROP TABLE baa_application.operation.user_access;
+
+

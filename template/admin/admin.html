@@ -94,9 +94,9 @@
 			<th>Unit Price IRR</th>
 			<th>VAT Unit Price IRR</th>
 			<th>Quantity</th>
-			<th>Payment Term</th>
+      <th>Payment Term</th>
+      <th>Payment Installments</th>
 			<th>Payment Center</th>
-			<th>Already Paid</th>
       <th>Payment Type</th>
       <th>Invoice Total IRR</th>
       <th>VAT Invoice Total IRR</th>
@@ -126,7 +126,6 @@ iDPurchaseRequestSelectElement = document.querySelector("#admin > select:nth-chi
           iDPurchaseRequestSelectElement.appendChild(iDPurchaseRequestOptionElement)
         })
       })
-
 
 
     purchaseRequestTable = document.querySelector("table")
@@ -165,10 +164,10 @@ iDPurchaseRequestSelectElement = document.querySelector("#admin > select:nth-chi
           quantity.innerHTML = templateParameter.quantity
           payment_term = document.createElement("td")
           payment_term.innerHTML = templateParameter.payment_term
+          payment_installment = document.createElement("td")
+          payment_installment.innerHTML = templateParameter.payment_installment
           payment_center = document.createElement("td")
           payment_center.innerHTML = templateParameter.payment_center
-          already_paid = document.createElement("td")
-          already_paid.innerHTML = templateParameter.already_paid
           payment_type = document.createElement("td")
           payment_type.innerHTML = templateParameter.payment_type
           invoice_total = document.createElement("td")
@@ -191,7 +190,6 @@ iDPurchaseRequestSelectElement = document.querySelector("#admin > select:nth-chi
           row.appendChild(quantity)
           row.appendChild(payment_term)
           row.appendChild(payment_center)
-          row.appendChild(already_paid)
           row.appendChild(payment_type)
           row.appendChild(invoice_total)
           row.appendChild(vat_invoice_total)

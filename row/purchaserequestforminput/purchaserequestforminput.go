@@ -13,24 +13,24 @@ import (
 // PurchaseRequestFormInput represents one purchase request
 // it also includes potential error or form to include into the web page used to collect purchase requests
 type PurchaseRequestFormInput struct {
-	IDPurchaseRequest string `json:"id_purchase_request"`
-	CostCenter        string `json:"cost_center"`
-	Initiator         string `json:"initiator"`
-	PrType            string `json:"pr_type"`
-	CostCategory      string `json:"cost_category"`
-	InvoiceNumber     string `json:"invoice_number"`
-	InvoiceDate       string `json:"invoice_date"`
-	VendorName        string `json:"vendor_name"`
-	ItemDescription   string `json:"item_description"`
-	UnitPrice         string `json:"unit_price"`
-	VatUnitPrice      string `json:"vat_unit_price"`
-	Quantity          string `json:"quantity"`
-	PaymentTerm       string `json:"payment_term"`
-	PaymentCenter     string `json:"payment_center"`
-	AlreadyPaid       string `json:"already_paid"`
-	PaymentType       string `json:"payment_type"`
-	InvoiceTotal      string `json:"invoice_total"`
-	VatInvoiceTotal   string `json:"vat_invoice_total"`
+	IDPurchaseRequest  string `json:"id_purchase_request"`
+	CostCenter         string `json:"cost_center"`
+	Initiator          string `json:"initiator"`
+	PrType             string `json:"pr_type"`
+	CostCategory       string `json:"cost_category"`
+	InvoiceNumber      string `json:"invoice_number"`
+	InvoiceDate        string `json:"invoice_date"`
+	VendorName         string `json:"vendor_name"`
+	ItemDescription    string `json:"item_description"`
+	UnitPrice          string `json:"unit_price"`
+	VatUnitPrice       string `json:"vat_unit_price"`
+	Quantity           string `json:"quantity"`
+	PaymentTerm        string `json:"payment_term"`
+	PaymentInstallment string `json:"payment_installment"`
+	PaymentCenter      string `json:"payment_center"`
+	PaymentType        string `json:"payment_type"`
+	InvoiceTotal       string `json:"invoice_total"`
+	VatInvoiceTotal    string `json:"vat_invoice_total"`
 
 	Error string
 }
@@ -54,8 +54,8 @@ func (purchaseRequestFormInput *PurchaseRequestFormInput) Validate() bool {
 		validation.Field(&purchaseRequestFormInput.VatUnitPrice, validation.Required, is.Float),
 		validation.Field(&purchaseRequestFormInput.Quantity, validation.Required, is.Int),
 		validation.Field(&purchaseRequestFormInput.PaymentTerm, validation.Required),
+		validation.Field(&purchaseRequestFormInput.PaymentInstallment, validation.Required),
 		validation.Field(&purchaseRequestFormInput.PaymentCenter, validation.Required),
-		validation.Field(&purchaseRequestFormInput.AlreadyPaid, validation.Required),
 		validation.Field(&purchaseRequestFormInput.PaymentType, validation.Required),
 	)
 
@@ -89,7 +89,6 @@ func (purchaseRequestFormInput *PurchaseRequestFormInput) Render(c *gin.Context,
 		`Quantity`:          purchaseRequestFormInput.Quantity,
 		`PaymentTerm`:       purchaseRequestFormInput.PaymentTerm,
 		`PaymentCenter`:     purchaseRequestFormInput.PaymentCenter,
-		`AlreadyPaid`:       purchaseRequestFormInput.AlreadyPaid,
 		`PaymentType`:       purchaseRequestFormInput.PaymentType,
 		`InvoiceTotal`:      purchaseRequestFormInput.InvoiceTotal,
 		`VatInvoiceTotal`:   purchaseRequestFormInput.VatInvoiceTotal,
