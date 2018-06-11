@@ -48,6 +48,31 @@ func StartInvoiceDate(c *gin.Context) {
 	c.Writer.Write(invoiceDateTableByte)
 }
 
+// StartAvailableCostCenter populates the admin web page with pending purchase requests - GET request
+func StartAvailableCostCenter(c *gin.Context) {
+
+	// DO NOT PUT AUTHORIZE HERE OTHERWISE CHANGES SESSION AND BREAKS EVERYTHING
+
+	// connect to Baa database
+	dbBaa := connectdb.ConnectToBaa()
+	defer dbBaa.Close()
+
+	costCenterTable := baainteract.GetAvailableCostCenter(dbBaa, user.IDUser)
+
+	/*var costCenterTableStr []string
+
+	for i := 0; i < len(costCenterTable); i++ {
+		costCenterTableStr = append(costCenterTableStr, costCenterTable[i].GIDFunction)
+	}*/
+
+	//Convert the `costCenterTable` variable to json
+	costCenterTableByte, err := json.Marshal(costCenterTable)
+	handleErr(c, err)
+
+	// If all goes well, write the JSON list of costCenterTable to the response
+	c.Writer.Write(costCenterTableByte)
+}
+
 // AnswerForm retrieves user inputs, validate them and upload them to database - POST request
 func AnswerForm(c *gin.Context) {
 
@@ -60,7 +85,7 @@ func AnswerForm(c *gin.Context) {
 	// in case validation fails, we also want to return these values to the form for good user experience
 	purchaseRequestFormInput := &purchaserequestforminput.PurchaseRequestFormInput{
 		CostCenter:         r.FormValue(`costCenter`),
-		Initiator:          r.FormValue(`initiator`),
+		Initiator:          user.Name,
 		PrType:             r.FormValue(`prType`),
 		CostCategory:       r.FormValue(`costCategory`),
 		InvoiceNumber:      r.FormValue(`invoiceNumber`),

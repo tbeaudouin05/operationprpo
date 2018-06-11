@@ -38,7 +38,7 @@ func AnswerCostCenterForm(c *gin.Context) {
 	defer dbBaa.Close()
 
 	costCenterFormInput := &costcenter.CostCenter{
-		GIDDepartment: r.FormValue(`GIDDepartment`),
+		GFKDepartment: r.FormValue(`GFKDepartment`),
 		FunctionCode:  baainteract.GetNextFunctionCode(dbBaa),
 		FunctionName:  r.FormValue(`FunctionName`),
 	}
@@ -68,7 +68,7 @@ func AnswerDepartmentForm(c *gin.Context) {
 	defer dbBaa.Close()
 
 	departmentFormInput := &costcenter.Department{
-		GIDLocation:    r.FormValue(`GIDLocation`),
+		GFKLocation:    r.FormValue(`GFKLocation`),
 		DepartmentCode: baainteract.GetNextDepartmentCode(dbBaa),
 		DepartmentName: r.FormValue(`DepartmentName`),
 	}
@@ -98,7 +98,7 @@ func AnswerLocationForm(c *gin.Context) {
 	defer dbBaa.Close()
 
 	locationFormInput := &costcenter.Location{
-		GIDDivision:  r.FormValue(`GIDDivision`),
+		FKDivision:   r.FormValue(`FKDivision`),
 		LocationCode: baainteract.GetNextLocationCode(dbBaa),
 		LocationName: r.FormValue(`LocationName`),
 	}

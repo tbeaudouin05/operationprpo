@@ -13,7 +13,8 @@ import (
 
 // CostCenter stores necessary information to register a new CostCenter
 type CostCenter struct {
-	GIDDepartment string `json:"gid_department"`
+	GIDFunction   string `json:"gid_function"`
+	GFKDepartment string `json:"gfk_department"`
 	FunctionCode  string `json:"function_code"`
 	FunctionName  string `json:"function_name"`
 
@@ -28,7 +29,7 @@ func (costCenter *CostCenter) Validate(listOfFunctionName string) bool {
 
 	// define validation of each field of the costCenter
 	err := validation.ValidateStruct(costCenter,
-		validation.Field(&costCenter.GIDDepartment, validation.Required, validation.Match(regexp.MustCompile("^[0-9]{6}$"))),
+		validation.Field(&costCenter.GFKDepartment, validation.Required, validation.Match(regexp.MustCompile("^[0-9]{6}$"))),
 		validation.Field(&costCenter.FunctionCode, validation.Required, validation.Match(regexp.MustCompile("^[0-9]{3}$")), validation.NotIn(listOfFunctionName)),
 		validation.Field(&costCenter.FunctionName, validation.Required, validation.NotIn(listOfFunctionName)),
 	)
@@ -49,7 +50,8 @@ func (costCenter *CostCenter) Render(c *gin.Context, htmlTemplate string) {
 	handleErr(c, err)
 	// render the htmlTemplate given the costCenter
 	err = tmpl.Execute(c.Writer, map[string]interface{}{
-		`GIDDepartment`: costCenter.GIDDepartment,
+		`GIDFunction`:   costCenter.GIDFunction,
+		`GFKDepartment`: costCenter.GFKDepartment,
 		`FunctionCode`:  costCenter.FunctionCode,
 		`FunctionName`:  costCenter.FunctionName,
 
@@ -63,7 +65,7 @@ func (costCenter *CostCenter) Render(c *gin.Context, htmlTemplate string) {
 
 // Department stores necessary information to register a new Department
 type Department struct {
-	GIDLocation    string `json:"gid_location"`
+	GFKLocation    string `json:"gfk_location"`
 	DepartmentCode string `json:"department_code"`
 	DepartmentName string `json:"department_name"`
 
@@ -78,7 +80,7 @@ func (department *Department) Validate(listOfDepartmentName string) bool {
 
 	// define validation of each field of the department
 	err := validation.ValidateStruct(department,
-		validation.Field(&department.GIDLocation, validation.Required, validation.Match(regexp.MustCompile("^[0-9]{4}$"))),
+		validation.Field(&department.GFKLocation, validation.Required, validation.Match(regexp.MustCompile("^[0-9]{4}$"))),
 		validation.Field(&department.DepartmentCode, validation.Required, validation.Match(regexp.MustCompile("^[0-9]{2}$"))),
 		validation.Field(&department.DepartmentName, validation.Required, validation.NotIn(listOfDepartmentName)),
 	)
@@ -99,7 +101,7 @@ func (department *Department) Render(c *gin.Context, htmlTemplate string) {
 	handleErr(c, err)
 	// render the htmlTemplate given the department
 	err = tmpl.Execute(c.Writer, map[string]interface{}{
-		`GIDLocation`:    department.GIDLocation,
+		`GFKLocation`:    department.GFKLocation,
 		`DepartmentCode`: department.DepartmentCode,
 		`DepartmentName`: department.DepartmentName,
 
@@ -113,7 +115,7 @@ func (department *Department) Render(c *gin.Context, htmlTemplate string) {
 
 // Location stores necessary information to register a new Location
 type Location struct {
-	GIDDivision  string `json:"gid_location"`
+	FKDivision   string `json:"fk_division"`
 	LocationCode string `json:"location_code"`
 	LocationName string `json:"location_name"`
 
@@ -128,7 +130,7 @@ func (location *Location) Validate(listOfLocationName string) bool {
 
 	// define validation of each field of the location
 	err := validation.ValidateStruct(location,
-		validation.Field(&location.GIDDivision, validation.Required, validation.Match(regexp.MustCompile("^[0-9]{2}$"))),
+		validation.Field(&location.FKDivision, validation.Required, validation.Match(regexp.MustCompile("^[0-9]{2}$"))),
 		validation.Field(&location.LocationCode, validation.Required, validation.Match(regexp.MustCompile("^[0-9]{2}$"))),
 		validation.Field(&location.LocationName, validation.Required, validation.NotIn(listOfLocationName)),
 	)
@@ -149,7 +151,7 @@ func (location *Location) Render(c *gin.Context, htmlTemplate string) {
 	handleErr(c, err)
 	// render the htmlTemplate given the location
 	err = tmpl.Execute(c.Writer, map[string]interface{}{
-		`GIDDivision`:  location.GIDDivision,
+		`FKDivision`:   location.FKDivision,
 		`LocationCode`: location.LocationCode,
 		`LocationName`: location.LocationName,
 

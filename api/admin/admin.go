@@ -60,8 +60,6 @@ func StartPendingPurchaseRequest(c *gin.Context) {
 
 	//Convert the `purchaseRequestFormInputTable` variable to json
 	purchaseRequestFormInputTableByte, err := json.Marshal(purchaseRequestFormInputTable)
-
-	// If there is an error, print it to the console, and return a server error response to the user
 	handleErr(c, err)
 
 	// If all goes well, write the JSON list of purchaseRequestFormInputTable to the response

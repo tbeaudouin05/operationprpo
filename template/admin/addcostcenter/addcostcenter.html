@@ -56,9 +56,9 @@
     </div>
 
     <form action="/admin/addcostcenter" id="addcostcenter" method="post">
-        Department GID:<select id="GIDDepartment" name="GIDDepartment" form="addcostcenter" required>
+        Department GID:<select id="GFKDepartment" name="GFKDepartment" form="addcostcenter" required>
             <option value=""></option>
-            <option selected="selected">{{ .GIDDepartment }}</option>
+            <option selected="selected">{{ .GFKDepartment }}</option>
                     </select>
         Function Name:<input type="text" name="FunctionName" pattern="[0-9]{3}" title="3 digits" value="{{ .FunctionName }}" required>
         
@@ -71,9 +71,9 @@
       </div>
   
       <form action="/admin/adddepartment" id="adddepartment" method="post">
-          Location GID:<select id="GIDLocation" name="GIDLocation" form="adddepartment" required>
+          Location GID:<select id="GFKLocation" name="GFKLocation" form="adddepartment" required>
               <option value=""></option>
-              <option selected="selected">{{ .GIDLocation }}</option>
+              <option selected="selected">{{ .GFKLocation }}</option>
                       </select>
           Department Name:<input type="text" name="DepartmentName" pattern="[0-9]{2}" title="2 digits" value="{{ .DepartmentName }}" required>
           
@@ -86,9 +86,9 @@
         </div>
     
         <form action="/admin/addlocation" id="addlocation" method="post">
-            Division GID:<select id="GIDDivision" name="GIDDivision" form="addlocation" required>
+            Division GID:<select id="FKDivision" name="FKDivision" form="addlocation" required>
                 <option value=""></option>
-                <option selected="selected">{{ .GIDDivision }}</option>
+                <option selected="selected">{{ .FKDivision }}</option>
                         </select>
             Location Name:<input type="text" name="LocationName" pattern="[0-9]{2}" title="2 digits" value="{{ .LocationName }}" required>
             

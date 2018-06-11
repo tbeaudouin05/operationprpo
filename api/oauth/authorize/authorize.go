@@ -79,6 +79,7 @@ func Authorize(c *gin.Context, user *useraccess.User) {
 	dbBaa := connectdb.ConnectToBaa()
 	defer dbBaa.Close()
 	baainteract.GetUserInfo(user, dbBaa)
+
 	if user.Access == `` {
 		session.Set("unauthorized", "Your account cannot access this application!")
 		err := session.Save()

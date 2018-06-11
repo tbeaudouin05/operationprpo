@@ -26,6 +26,8 @@ type User struct {
 	Access        string `json:"access"`
 	LoginURL      string `json:"login_url"`
 
+	IDUser string `json:"id_user"`
+
 	Error   string
 	Success string
 }

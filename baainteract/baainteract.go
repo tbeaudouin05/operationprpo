@@ -17,7 +17,7 @@ func LoadPurchaseRequestToDb(purchaseRequestFormInput *purchaserequestforminput.
 	// prepare statement to insert values into baa_application.operation.purchase_request
 	insertPurchaseRequestStr := `
 INSERT INTO baa_application.operation.purchase_request (
-	fk_cost_center  
+	gfk_cost_center  
 	,initiator  
 	,pr_type  
 	,cost_category  
@@ -63,7 +63,7 @@ VALUES (@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9,@p10,@p11,@p12,@p13,@p14,@p15,'pendi
 func CreateNewUser(userFormInput *useraccess.User, dbBaa *sql.DB) error {
 	// prepare statement to insert values into baa_application.operation.purchase_request
 	insertNewUserStr := `
-INSERT INTO baa_application.operation.user_access (
+INSERT INTO baa_application.operation.pr_user (
 	email 
 	,name
 	,access) 
@@ -91,7 +91,7 @@ func CreateNewCostCenter(costCenterFormInput *costcenter.CostCenter, dbBaa *sql.
 	insertNewCostCenter, err := dbBaa.Prepare(insertNewCostCenterStr)
 
 	res, err := insertNewCostCenter.Exec(
-		costCenterFormInput.GIDDepartment,
+		costCenterFormInput.GFKDepartment,
 		costCenterFormInput.FunctionCode,
 		costCenterFormInput.FunctionName,
 	)
@@ -112,7 +112,7 @@ func CreateNewDepartment(departmentFormInput *costcenter.Department, dbBaa *sql.
 	insertNewDepartment, err := dbBaa.Prepare(insertNewDepartmentStr)
 
 	res, err := insertNewDepartment.Exec(
-		departmentFormInput.GIDLocation,
+		departmentFormInput.GFKLocation,
 		departmentFormInput.DepartmentCode,
 		departmentFormInput.DepartmentName,
 	)
@@ -133,7 +133,7 @@ func CreateNewLocation(locationFormInput *costcenter.Location, dbBaa *sql.DB) er
 	insertNewLocation, err := dbBaa.Prepare(insertNewLocationStr)
 
 	res, err := insertNewLocation.Exec(
-		locationFormInput.GIDDivision,
+		locationFormInput.FKDivision,
 		locationFormInput.LocationCode,
 		locationFormInput.LocationName,
 	)
@@ -147,9 +147,9 @@ func CreateNewLocation(locationFormInput *costcenter.Location, dbBaa *sql.DB) er
 
 // GetPendingPurchaseRequest fetches pending purchase requests from baa_application.operation.purchase_request
 func GetPendingPurchaseRequest(dbBaa *sql.DB) []*purchaserequestforminput.PurchaseRequestFormInput {
-	rows, err := dbBaa.Query(`SELECT 
+	rows, err := dbBaa.Query(` SELECT 
 		pr.id_purchase_request
-		,pr.cost_center  
+		,f.name cost_center  
 		,pr.initiator  
 		,pr.pr_type  
 		,pr.cost_category  
@@ -167,6 +167,8 @@ func GetPendingPurchaseRequest(dbBaa *sql.DB) []*purchaserequestforminput.Purcha
     	,CAST(ROUND(pr.invoice_total ,2) as numeric(36,2)) invoice_total
 		,CAST(ROUND(pr.vat_invoice_total ,2) as numeric(36,2)) vat_invoice_total
 		FROM baa_application.operation.purchase_request pr
+    JOIN baa_application.operation.func f
+    ON pr.gfk_cost_center = f.gid_function
 		WHERE pr.purchase_request_status = 'pending'`)
 
 	// We return incase of an error, and defer the closing of the row structure
@@ -206,6 +208,58 @@ func GetPendingPurchaseRequest(dbBaa *sql.DB) []*purchaserequestforminput.Purcha
 	}
 
 	return purchaseRequestFormInputTable
+
+}
+
+func GetAvailableCostCenter(dbBaa *sql.DB, iDUser string) []*costcenter.CostCenter {
+
+	stmt, err := dbBaa.Prepare(`
+	SELECT 
+	ccv.id_cost_center
+	,ccv.cost_center_name
+		
+	 FROM baa_application.operation.cost_center_view ccv
+
+	 WHERE ccv.gfk_department IN (
+		SELECT pda.gfk_department 
+	 	FROM baa_application.operation.pr_department_access pda
+	 	WHERE pda.fk_user =@p1)
+
+  	OR ccv.gfk_location IN (
+		SELECT pla.gfk_location 
+	 	FROM baa_application.operation.pr_location_access pla
+	 	WHERE pla.fk_user =@p1)
+
+  	OR ccv.fk_division IN (
+		SELECT pdi.fk_division 
+	 	FROM baa_application.operation.pr_division_access pdi
+	 	WHERE pdi.fk_user =@p1)
+	 `)
+	checkError(err)
+	defer stmt.Close()
+
+	rows, err := stmt.Query(iDUser)
+	checkError(err)
+	defer rows.Close()
+
+	costCenterTable := []*costcenter.CostCenter{}
+
+	for rows.Next() {
+		// For each row returned by the table, create a pointer to a CostCenter,
+		costCenter := &costcenter.CostCenter{}
+		// Populate the attributes of the CostCenter,
+		// and return incase of an error
+		err := rows.Scan(
+			&costCenter.GIDFunction,
+			&costCenter.FunctionName,
+		)
+		checkError(err)
+		// Finally, append the result to the returned array, and repeat for
+		// the next row
+		costCenterTable = append(costCenterTable, costCenter)
+	}
+
+	return costCenterTable
 
 }
 
@@ -267,12 +321,13 @@ func GetUserInfo(user *useraccess.User, dbBaa *sql.DB) {
 
 	// store userQuery in a string
 	userQuery := `SELECT 
-	ua.name
-	,ua.access
-	FROM baa_application.operation.user_access ua
-	WHERE ua.email = @p1`
+	pu.id_user
+	,pu.name
+	,pu.access
+	FROM baa_application.operation.pr_user pu
+	WHERE pu.email = @p1`
 
-	err := dbBaa.QueryRow(userQuery, user.Email).Scan(&user.Name, &user.Access)
+	err := dbBaa.QueryRow(userQuery, user.Email).Scan(&user.IDUser, &user.Name, &user.Access)
 	if err != nil {
 		if err.Error() != `sql: no rows in result set` {
 			log.Fatal(err.Error())

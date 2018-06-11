@@ -53,42 +53,10 @@
     </div>
 
     <form action="/purchaserequest" id="purchaserequest" method="post">
-        Cost Center:<select name="costCenter" form="purchaserequest" required>
-                <option value=""></option>
+        Cost Center:<select id="costCenter" name="costCenter" form="purchaserequest" required>
+                <option value=""></option> 
                 <option selected="selected">{{ .CostCenter }}</option>
-                <option value="1">Receiving</option>
-                <option value="2">Inbound</option>
-                <option value="3">Picking</option>
-                <option value="4">Packing</option>
-                <option value="5">Packaging</option>
-                <option value="6">Troubleshooting</option>
-                <option value="7">Tehran Dispatch</option>
-                <option value="8">Shahrestan Dispatch</option>
-                <option value="9">Hub-to-hub Logistics</option>
-                <option value="10">RTS</option>
-                <option value="11">RFC</option>
-                <option value="12">Administration</option>
-                <option value="13">Planning and Budgeting</option>
-                <option value="14">Warehouse Management</option>
-                </select>
-        Initiator:<select name="initiator" form="purchaserequest" required>
-                <option value=""></option>
-                <option selected="selected">{{ .Initiator }}</option>
-                <option value="Mehdi Sarkhosh">Mehdi Sarkhosh</option>
-                <option value="Sahand Esmaeili">Hamed Birjantalab</option>
-                <option value="Vahid Delkhahi">Vahid Delkhahi</option>
-                <option value="Ali Sadeghi">Ali Sadeghi</option>
-                <option value="Saeed Nasouti">Saeed Nasouti</option>
-                <option value="Omid Hasirbafan">Omid Hasirbafan</option>
-                <option value="Omid Delkhahi">Omid Delkhahi</option>
-                <option value="Mehdi Malek">Mehdi Malek</option>
-                <option value="Kamelia Navaei">Kamelia Navaei</option>
-                <option value="Ashutosh Gaur">Ashutosh Gaur</option>
-                <option value="Hossein Entekhabi">Hossein Entekhabi</option>
-                <option value="Julien Lefebvre">Julien Lefebvre</option>
-                <option value="Vahid Laalipour">Vahid Laalipour</option>
-                <option value="Raha Molaei">Raha Molaei</option>        
-                </select>
+        </select>
         PR Type:<select name="prType" form="purchaserequest" required>
                 <option value=""></option>
                 <option selected="selected">{{ .PrType }}</option>
@@ -163,7 +131,25 @@
       
       <script>
 
-      invoiceDateSelectElement = document.querySelector("#invoiceDate")
+       costCenterSelectElement = document.querySelector("#costCenter")
+      fetch("/purchaserequest/startavailablecostcenter")
+      .then(costCenterTableByte => costCenterTableByte.json())
+      .then(costCenterTableJSON => {
+        //Once we fetch the list, we iterate over it
+        costCenterTableJSON.forEach(costCenter => {
+
+          // create the <option> element and fill it
+          costCenterOptionElement = document.createElement("option")
+          costCenterOptionElement.value = costCenter.gid_function
+          costCenterOptionElement.innerHTML = costCenter.function_name
+
+          // Finally, add the option element to the select element itself
+          costCenterSelectElement.appendChild(costCenterOptionElement)
+        })
+      })
+
+
+          invoiceDateSelectElement = document.querySelector("#invoiceDate")
       fetch("/purchaserequest/startforminvoicedate")
       .then(invoiceDateTableByte => invoiceDateTableByte.json())
       .then(invoiceDateTableJSON => {
@@ -179,6 +165,8 @@
           invoiceDateSelectElement.appendChild(invoiceDateOptionElement)
         })
       })
+
+
 
   </script>
 
