@@ -9,7 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/thomas-bamilo/operation/operationprpo/api/oauth/authorize"
-	"github.com/thomas-bamilo/operation/operationprpo/baainteract"
+	pr_baainteract "github.com/thomas-bamilo/operation/operationprpo/baainteract/purchaserequest"
 	"github.com/thomas-bamilo/operation/operationprpo/row/purchaserequestforminput"
 	"github.com/thomas-bamilo/operation/operationprpo/row/useraccess"
 	"github.com/thomas-bamilo/sql/connectdb"
@@ -55,7 +55,7 @@ func StartCostCategory(c *gin.Context) {
 	dbBaa := connectdb.ConnectToBaa()
 	defer dbBaa.Close()
 
-	costCenterTable := baainteract.GetCostCategory(dbBaa)
+	costCenterTable := pr_baainteract.GetCostCategory(dbBaa)
 
 	//Convert the `costCenterTable` variable to json
 	costCenterTableByte, err := json.Marshal(costCenterTable)
@@ -74,7 +74,7 @@ func StartAvailableCostCenter(c *gin.Context) {
 	dbBaa := connectdb.ConnectToBaa()
 	defer dbBaa.Close()
 
-	costCenterTable := baainteract.GetAvailableCostCenter(dbBaa, user.IDUser)
+	costCenterTable := pr_baainteract.GetAvailableCostCenter(dbBaa, user.IDUser)
 
 	//Convert the `costCenterTable` variable to json
 	costCenterTableByte, err := json.Marshal(costCenterTable)
@@ -123,7 +123,7 @@ func AnswerForm(c *gin.Context) {
 
 	// LoadToDb uploads the purchase request form user inputs (= purchaseRequestFormInput) to database
 	dbBaa := connectdb.ConnectToBaa()
-	err := baainteract.LoadPurchaseRequestToDb(purchaseRequestFormInput, dbBaa)
+	err := pr_baainteract.LoadPurchaseRequestToDb(purchaseRequestFormInput, dbBaa)
 	handleErr(c, err)
 
 	// if isAnotherItem = yes ie the user wants to make a similar purchase request

@@ -145,14 +145,13 @@ CREATE VIEW operation.cost_center_view AS
   SELECT 
     fu.gid_function id_cost_center -- global ID: unique accross all divisions
     ,CONCAT(fu.name, ' | ', de.name, ' | ', lo.name) cost_center_name
-    ,di.id_division fk_division 
-    ,di.name division_shortcode
+    ,de.gid_department gfk_department -- global foreign key: unique accross all divisions
+    ,CONCAT(de.name, ' | ', lo.name) department_name
     ,lo.gid_location gfk_location -- global foreign key: unique accross all divisions
     ,lo.name location_name
-    ,de.gid_department gfk_department -- global foreign key: unique accross all divisions
-    ,de.name department_name
-    ,fu.gid_function -- global ID: unique accross all divisions
-    ,fu.name function_name
+    ,di.id_division fk_division 
+    ,di.name division_name
+
     
   FROM baa_application.finance.division di
   JOIN baa_application.operation.location lo

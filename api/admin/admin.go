@@ -8,7 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/thomas-bamilo/operation/operationprpo/api/oauth/authorize"
-	"github.com/thomas-bamilo/operation/operationprpo/baainteract"
+	ad_baainteract "github.com/thomas-bamilo/operation/operationprpo/baainteract/admin"
 	"github.com/thomas-bamilo/operation/operationprpo/row/adminchoice"
 	"github.com/thomas-bamilo/operation/operationprpo/row/useraccess"
 	"github.com/thomas-bamilo/sql/connectdb"
@@ -36,7 +36,7 @@ func StartIDPurchaseRequest(c *gin.Context) {
 	defer dbBaa.Close()
 
 	// GetIDPurchaseRequest queries baa_application.operation.purchase_request to return all pending iDPurchaseRequest
-	iDPurchaseRequestTable := baainteract.GetIDPurchaseRequest(dbBaa)
+	iDPurchaseRequestTable := ad_baainteract.GetIDPurchaseRequest(dbBaa)
 
 	//Convert the `iDPurchaseRequestTable` variable to json
 	iDPurchaseRequestTableByte, err := json.Marshal(iDPurchaseRequestTable)
@@ -56,7 +56,7 @@ func StartPendingPurchaseRequest(c *gin.Context) {
 	defer dbBaa.Close()
 
 	// GetPendingPurchaseRequest queries baa_application.operation.purchase_request to return all pending purchase requests
-	purchaseRequestFormInputTable := baainteract.GetPendingPurchaseRequest(dbBaa)
+	purchaseRequestFormInputTable := ad_baainteract.GetPendingPurchaseRequest(dbBaa)
 
 	//Convert the `purchaseRequestFormInputTable` variable to json
 	purchaseRequestFormInputTableByte, err := json.Marshal(purchaseRequestFormInputTable)
@@ -89,13 +89,13 @@ func AcceptRejectPurchaseRequest(c *gin.Context) {
 
 	if adminChoice.AcceptReject == `Accept` {
 		dbBaa := connectdb.ConnectToBaa()
-		err := baainteract.ConvertPurchaseRequestToPurchaseOrder(adminChoice.IDPurchaseRequest, dbBaa)
+		err := ad_baainteract.ConvertPurchaseRequestToPurchaseOrder(adminChoice.IDPurchaseRequest, dbBaa)
 		handleErr(c, err)
 	}
 
 	if adminChoice.AcceptReject == `Reject` {
 		dbBaa := connectdb.ConnectToBaa()
-		err := baainteract.ConvertPurchaseRequestToRejectedPurchaseRequest(adminChoice.IDPurchaseRequest, dbBaa)
+		err := ad_baainteract.ConvertPurchaseRequestToRejectedPurchaseRequest(adminChoice.IDPurchaseRequest, dbBaa)
 		handleErr(c, err)
 	}
 

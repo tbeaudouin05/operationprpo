@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/thomas-bamilo/operation/operationprpo/baainteract"
+	pr_baainteract "github.com/thomas-bamilo/operation/operationprpo/baainteract/purchaserequest"
 	"github.com/thomas-bamilo/sql/connectdb"
 
 	"github.com/thomas-bamilo/operation/operationprpo/row/useraccess"
@@ -26,7 +26,7 @@ func AuthorizeCcAdmin(c *gin.Context, user *useraccess.User) {
 
 	dbBaa := connectdb.ConnectToBaa()
 	defer dbBaa.Close()
-	baainteract.GetUserInfo(user, dbBaa)
+	pr_baainteract.GetUserInfo(user, dbBaa)
 	if user.Access != `cc_admin` && user.Access != `admin` {
 		session.Set("unauthorized", "You need an admin account to access this web page!")
 		err := session.Save()
@@ -52,7 +52,7 @@ func AuthorizePrAdmin(c *gin.Context, user *useraccess.User) {
 
 	dbBaa := connectdb.ConnectToBaa()
 	defer dbBaa.Close()
-	baainteract.GetUserInfo(user, dbBaa)
+	pr_baainteract.GetUserInfo(user, dbBaa)
 	if user.Access != `pr_admin` && user.Access != `cc_admin` && user.Access != `admin` {
 		session.Set("unauthorized", "You need an admin account to access this web page!")
 		err := session.Save()
@@ -78,7 +78,7 @@ func Authorize(c *gin.Context, user *useraccess.User) {
 
 	dbBaa := connectdb.ConnectToBaa()
 	defer dbBaa.Close()
-	baainteract.GetUserInfo(user, dbBaa)
+	pr_baainteract.GetUserInfo(user, dbBaa)
 
 	if user.Access == `` {
 		session.Set("unauthorized", "Your account cannot access this application!")

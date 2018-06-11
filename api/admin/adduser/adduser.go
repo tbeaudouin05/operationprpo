@@ -7,7 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/thomas-bamilo/operation/operationprpo/api/oauth/authorize"
-	"github.com/thomas-bamilo/operation/operationprpo/baainteract"
+	us_baainteract "github.com/thomas-bamilo/operation/operationprpo/baainteract/adduser"
 	"github.com/thomas-bamilo/operation/operationprpo/row/useraccess"
 	"github.com/thomas-bamilo/sql/connectdb"
 )
@@ -50,7 +50,7 @@ func AnswerForm(c *gin.Context) {
 
 	// LoadToDb uploads the purchase request form user inputs (= addUserFormInput) to database
 	dbBaa := connectdb.ConnectToBaa()
-	err := baainteract.CreateNewUser(addUserFormInput, dbBaa)
+	err := us_baainteract.CreateNewUser(addUserFormInput, dbBaa)
 	handleErr(c, err)
 
 	// if everything goes well, redirect user to adduserconfirmation web page
