@@ -20,7 +20,7 @@ INSERT INTO baa_application.operation.purchase_request (
 	gfk_cost_center  
 	,initiator  
 	,pr_type  
-	,cost_category  
+	,fk_cost_category  
 	,invoice_number  
 	,invoice_date  
 	,vendor_name  
@@ -147,12 +147,13 @@ func CreateNewLocation(locationFormInput *costcenter.Location, dbBaa *sql.DB) er
 
 // GetPendingPurchaseRequest fetches pending purchase requests from baa_application.operation.purchase_request
 func GetPendingPurchaseRequest(dbBaa *sql.DB) []*purchaserequestforminput.PurchaseRequestFormInput {
-	rows, err := dbBaa.Query(` SELECT 
+	rows, err := dbBaa.Query(`
+		SELECT 
 		pr.id_purchase_request
 		,f.name cost_center  
 		,pr.initiator  
 		,pr.pr_type  
-		,pr.cost_category  
+		,pcc.name_fa cost_category  
 		,pr.invoice_number  
 		,CONVERT(VARCHAR(50), pr.invoice_date, 101) invoice_date
 		,pr.vendor_name  
@@ -166,9 +167,15 @@ func GetPendingPurchaseRequest(dbBaa *sql.DB) []*purchaserequestforminput.Purcha
 		,pr.payment_type 
     	,CAST(ROUND(pr.invoice_total ,2) as numeric(36,2)) invoice_total
 		,CAST(ROUND(pr.vat_invoice_total ,2) as numeric(36,2)) vat_invoice_total
+
 		FROM baa_application.operation.purchase_request pr
-    JOIN baa_application.operation.func f
-    ON pr.gfk_cost_center = f.gid_function
+
+    	JOIN baa_application.operation.func f
+		ON pr.gfk_cost_center = f.gid_function
+
+		JOIN baa_application.operation.pr_cost_category pcc
+		ON pcc.id_cost_category = pr.fk_cost_category
+
 		WHERE pr.purchase_request_status = 'pending'`)
 
 	// We return incase of an error, and defer the closing of the row structure
@@ -260,6 +267,44 @@ func GetAvailableCostCenter(dbBaa *sql.DB, iDUser string) []*costcenter.CostCent
 	}
 
 	return costCenterTable
+
+}
+
+func GetCostCategory(dbBaa *sql.DB) []*purchaserequestforminput.CostCategory {
+
+	stmt, err := dbBaa.Prepare(`
+		SELECT 
+
+		pcc.id_cost_category
+		,pcc.name_fa
+		  
+		FROM baa_application.operation.pr_cost_category pcc
+	 `)
+	checkError(err)
+	defer stmt.Close()
+
+	rows, err := stmt.Query()
+	checkError(err)
+	defer rows.Close()
+
+	costCategoryTable := []*purchaserequestforminput.CostCategory{}
+
+	for rows.Next() {
+		// For each row returned by the table, create a pointer to a CostCategory,
+		costCategory := &purchaserequestforminput.CostCategory{}
+		// Populate the attributes of the CostCategory,
+		// and return incase of an error
+		err := rows.Scan(
+			&costCategory.IDCostCategory,
+			&costCategory.NameFa,
+		)
+		checkError(err)
+		// Finally, append the result to the returned array, and repeat for
+		// the next row
+		costCategoryTable = append(costCategoryTable, costCategory)
+	}
+
+	return costCategoryTable
 
 }
 

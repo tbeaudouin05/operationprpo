@@ -48,6 +48,23 @@ func StartInvoiceDate(c *gin.Context) {
 	c.Writer.Write(invoiceDateTableByte)
 }
 
+// StartCostCategory populates the admin web page with pending purchase requests - GET request
+func StartCostCategory(c *gin.Context) {
+
+	// connect to Baa database
+	dbBaa := connectdb.ConnectToBaa()
+	defer dbBaa.Close()
+
+	costCenterTable := baainteract.GetCostCategory(dbBaa)
+
+	//Convert the `costCenterTable` variable to json
+	costCenterTableByte, err := json.Marshal(costCenterTable)
+	handleErr(c, err)
+
+	// If all goes well, write the JSON list of costCenterTable to the response
+	c.Writer.Write(costCenterTableByte)
+}
+
 // StartAvailableCostCenter populates the admin web page with pending purchase requests - GET request
 func StartAvailableCostCenter(c *gin.Context) {
 
@@ -58,12 +75,6 @@ func StartAvailableCostCenter(c *gin.Context) {
 	defer dbBaa.Close()
 
 	costCenterTable := baainteract.GetAvailableCostCenter(dbBaa, user.IDUser)
-
-	/*var costCenterTableStr []string
-
-	for i := 0; i < len(costCenterTable); i++ {
-		costCenterTableStr = append(costCenterTableStr, costCenterTable[i].GIDFunction)
-	}*/
 
 	//Convert the `costCenterTable` variable to json
 	costCenterTableByte, err := json.Marshal(costCenterTable)
@@ -99,6 +110,8 @@ func AnswerForm(c *gin.Context) {
 		PaymentInstallment: r.FormValue(`paymentInstallment`),
 		PaymentCenter:      r.FormValue(`paymentCenter`),
 		PaymentType:        r.FormValue(`paymentType`),
+
+		IsAnotherItem: r.FormValue(`isAnotherItem`),
 	}
 
 	// Validate validates the purchaseRequestFormInput form user inputs
@@ -112,6 +125,14 @@ func AnswerForm(c *gin.Context) {
 	dbBaa := connectdb.ConnectToBaa()
 	err := baainteract.LoadPurchaseRequestToDb(purchaseRequestFormInput, dbBaa)
 	handleErr(c, err)
+
+	// if isAnotherItem = yes ie the user wants to make a similar purchase request
+	// then reload the page with same information + a success message
+	if purchaseRequestFormInput.IsAnotherItem == `yes` {
+		purchaseRequestFormInput.Success = `Purchase request successful: please add another item`
+		purchaseRequestFormInput.Render(c, `template/purchaserequest/purchaserequest.html`)
+		return
+	}
 
 	// if everything goes well, redirect user to confirmation web page
 	http.Redirect(c.Writer, r, `/purchaserequest/purchaserequestconfirmation`, http.StatusSeeOther)

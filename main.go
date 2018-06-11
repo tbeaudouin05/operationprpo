@@ -35,6 +35,7 @@ func main() {
 
 	router.GET(`/purchaserequest`, purchaserequestform.Start)
 	router.GET(`/purchaserequest/startavailablecostcenter`, purchaserequestform.StartAvailableCostCenter)
+	router.GET(`/purchaserequest/startcostcategory`, purchaserequestform.StartCostCategory)
 	router.GET(`/purchaserequest/startforminvoicedate`, purchaserequestform.StartInvoiceDate)
 	router.POST(`/purchaserequest`, purchaserequestform.AnswerForm)
 	router.GET(`/purchaserequest/purchaserequestconfirmation`, purchaserequestform.ConfirmForm)

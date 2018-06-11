@@ -38,6 +38,7 @@
         </style>
 
 <style type="text/css">.error {color: red;}</style>
+<style type="text/css">.success {color: green;}</style>
 
 </head>
 
@@ -50,9 +51,13 @@
     <h1>Purchase Request</h1>
     <div>
         <p class="error" >{{ .Error }}</p>
+        <p class="success" >{{ .Success }}</p>
     </div>
 
     <form action="/purchaserequest" id="purchaserequest" method="post">
+        <p>
+        <input type="checkbox" name="isAnotherItem" value="yes"> Several Items?<br>
+        </p>
         Cost Center:<select id="costCenter" name="costCenter" form="purchaserequest" required>
                 <option value=""></option> 
                 <option selected="selected">{{ .CostCenter }}</option>
@@ -63,16 +68,10 @@
                 <option value="Quantitative">Quantitative</option>
                 <option value="Non-Quantitative">Non-Quantitative</option>
                 </select>
-        Cost Category:<select name="costCategory" form="purchaserequest" required>
+        Cost Category:<select id="costCategory" name="costCategory" form="purchaserequest" required>
                 <option value=""></option>
                 <option selected="selected">{{ .CostCategory }}</option>
-                <option value="Utilities">Utilities</option>
-                <option value="Packaging Materials">Packaging Materials</option>
-                <option value="Fulfillment Materials">Non-Quantitative</option>
-                <option value="Accessories">Non-Quantitative</option>
-                <option value="F&amp;B">F&amp;B</option>
-                <option value="General Items">General Items</option>
-                </select>
+        </select>
         Invoice Number:<input type="text" name="invoiceNumber" value="{{ .InvoiceNumber }}" required>
         Invoice Date:<select id="invoiceDate" name="invoiceDate" form="purchaserequest" required>
                 <option value=""></option>
@@ -145,6 +144,23 @@
 
           // Finally, add the option element to the select element itself
           costCenterSelectElement.appendChild(costCenterOptionElement)
+        })
+      })
+
+        costCategorySelectElement = document.querySelector("#costCategory")
+      fetch("/purchaserequest/startcostcategory")
+      .then(costCategoryTableByte => costCategoryTableByte.json())
+      .then(costCategoryTableJSON => {
+        //Once we fetch the list, we iterate over it
+        costCategoryTableJSON.forEach(costCategory => {
+
+          // create the <option> element and fill it
+          costCategoryOptionElement = document.createElement("option")
+          costCategoryOptionElement.value = costCategory.id_cost_category
+          costCategoryOptionElement.innerHTML = costCategory.name_fa
+
+          // Finally, add the option element to the select element itself
+          costCategorySelectElement.appendChild(costCategoryOptionElement)
         })
       })
 

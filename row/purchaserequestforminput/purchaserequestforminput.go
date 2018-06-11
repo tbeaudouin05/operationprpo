@@ -32,7 +32,10 @@ type PurchaseRequestFormInput struct {
 	InvoiceTotal       string `json:"invoice_total"`
 	VatInvoiceTotal    string `json:"vat_invoice_total"`
 
-	Error string
+	IsAnotherItem string `json:"is_another_item"`
+
+	Success string
+	Error   string
 }
 
 // Validate validates the data of the purchase request sent by the user
@@ -75,26 +78,37 @@ func (purchaseRequestFormInput *PurchaseRequestFormInput) Render(c *gin.Context,
 	handleErr(c, err)
 	// render the htmlTemplate given the purchaseRequestFormInput
 	err = tmpl.Execute(c.Writer, map[string]interface{}{
-		`IDPurchaseRequest`: purchaseRequestFormInput.IDPurchaseRequest,
-		`CostCenter`:        purchaseRequestFormInput.CostCenter,
-		`Initiator`:         purchaseRequestFormInput.Initiator,
-		`PrType`:            purchaseRequestFormInput.PrType,
-		`CostCategory`:      purchaseRequestFormInput.CostCategory,
-		`InvoiceNumber`:     purchaseRequestFormInput.InvoiceNumber,
-		`InvoiceDate`:       purchaseRequestFormInput.InvoiceDate,
-		`VendorName`:        purchaseRequestFormInput.VendorName,
-		`ItemDescription`:   purchaseRequestFormInput.ItemDescription,
-		`UnitPrice`:         purchaseRequestFormInput.UnitPrice,
-		`VatUnitPrice`:      purchaseRequestFormInput.VatUnitPrice,
-		`Quantity`:          purchaseRequestFormInput.Quantity,
-		`PaymentTerm`:       purchaseRequestFormInput.PaymentTerm,
-		`PaymentCenter`:     purchaseRequestFormInput.PaymentCenter,
-		`PaymentType`:       purchaseRequestFormInput.PaymentType,
-		`InvoiceTotal`:      purchaseRequestFormInput.InvoiceTotal,
-		`VatInvoiceTotal`:   purchaseRequestFormInput.VatInvoiceTotal,
-		`Error`:             purchaseRequestFormInput.Error,
+		`IDPurchaseRequest`:  purchaseRequestFormInput.IDPurchaseRequest,
+		`CostCenter`:         purchaseRequestFormInput.CostCenter,
+		`Initiator`:          purchaseRequestFormInput.Initiator,
+		`PrType`:             purchaseRequestFormInput.PrType,
+		`CostCategory`:       purchaseRequestFormInput.CostCategory,
+		`InvoiceNumber`:      purchaseRequestFormInput.InvoiceNumber,
+		`InvoiceDate`:        purchaseRequestFormInput.InvoiceDate,
+		`VendorName`:         purchaseRequestFormInput.VendorName,
+		`ItemDescription`:    purchaseRequestFormInput.ItemDescription,
+		`UnitPrice`:          purchaseRequestFormInput.UnitPrice,
+		`VatUnitPrice`:       purchaseRequestFormInput.VatUnitPrice,
+		`Quantity`:           purchaseRequestFormInput.Quantity,
+		`PaymentTerm`:        purchaseRequestFormInput.PaymentTerm,
+		`PaymentInstallment`: purchaseRequestFormInput.PaymentInstallment,
+		`PaymentCenter`:      purchaseRequestFormInput.PaymentCenter,
+		`PaymentType`:        purchaseRequestFormInput.PaymentType,
+		`InvoiceTotal`:       purchaseRequestFormInput.InvoiceTotal,
+		`VatInvoiceTotal`:    purchaseRequestFormInput.VatInvoiceTotal,
+
+		`IsAnotherItem`: purchaseRequestFormInput.IsAnotherItem,
+
+		`Success`: purchaseRequestFormInput.Success,
+		`Error`:   purchaseRequestFormInput.Error,
 	})
 	handleErr(c, err)
+}
+
+type CostCategory struct {
+	IDCostCategory string `json:"id_cost_category"`
+	Name           string `json:"name"`
+	NameFa         string `json:"name_fa"`
 }
 
 func handleErr(c *gin.Context, err error) {

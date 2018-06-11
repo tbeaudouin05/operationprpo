@@ -3,7 +3,7 @@
   ,gfk_cost_center  VARCHAR(9) FOREIGN KEY REFERENCES baa_application.operation.func(gid_function) -- global foreign key: unique accross all divisions
   ,initiator  VARCHAR(50)
   ,pr_type  VARCHAR(50)
-  ,cost_category  VARCHAR(50)
+  ,fk_cost_category  INT FOREIGN KEY REFERENCES baa_application.operation.pr_cost_category(id_cost_category)
   ,invoice_number  VARCHAR(50)
   ,invoice_date  DATE
   ,vendor_name  VARCHAR(50)
@@ -19,6 +19,13 @@
   ,vat_invoice_total AS vat_unit_price*quantity
   ,purchase_request_status VARCHAR(50)
 );
+
+CREATE TABLE baa_application.operation.pr_cost_category (
+  id_cost_category INT IDENTITY(1,1) PRIMARY KEY
+  ,name VARCHAR(100) NOT NULL
+  ,name_fa NVARCHAR(100) NOT NULL
+);
+
 
 
 CREATE TABLE baa_application.operation.pr_user (
@@ -181,13 +188,16 @@ INSERT INTO baa_application.operation.location (
   ,tag_code
   ) VALUES ('69','02','Customer Service','CUS','02')
 
-    INSERT INTO baa_application.operation.department (
+  INSERT INTO baa_application.operation.department (
   gfk_location
   ,department_code
   ,name
   ,tag
   ,tag_code
-  ) VALUES ('6904','05','BSC','BSC','05')
+  ) VALUES ('6901','01','FBB','FBB','01')
+
+    DELETE FROM baa_application.operation.department
+    WHERE gid_department = @p1
 
   INSERT INTO baa_application.operation.func (
   gfk_department
@@ -195,7 +205,7 @@ INSERT INTO baa_application.operation.location (
   ,name
   ,tag
   ,tag_code
-  ) VALUES ('690405','004','Troubleshoot','TROU','004')
+  ) VALUES ('690301','016','Consignment Inbound','CONI','016')
 
 DELETE FROM baa_application.operation.purchase_request;
 DELETE FROM baa_application.operation.user_access;
