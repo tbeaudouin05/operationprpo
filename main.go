@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/thomas-bamilo/operation/operationprpo/api/admin"
+	"github.com/thomas-bamilo/operation/operationprpo/api/admin/adduser"
 	"github.com/thomas-bamilo/operation/operationprpo/api/homepage"
 	"github.com/thomas-bamilo/operation/operationprpo/api/oauth/authenticate"
 	"github.com/thomas-bamilo/operation/operationprpo/api/oauth/login"
@@ -24,6 +25,8 @@ func main() {
 		Path:   `/`,
 		MaxAge: 86400 * 7,
 	})
+
+	// ALL THAT IS LEFT IS ADDING THE API CALL TO THIS PAGE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	// using the cookie store:
 	router.Use(sessions.Sessions(`goquestsession`, store))
@@ -45,9 +48,9 @@ func main() {
 	router.GET(`/admin/startpendingpurchaserequest`, admin.StartPendingPurchaseRequest)
 	router.POST(`/admin`, admin.AcceptRejectPurchaseRequest)
 
-	//router.GET(`/admin/adduser`, adduser.Start)
-	//router.POST(`/admin/adduser`, adduser.AnswerForm)
-	//router.GET(`/admin/adduserconfirmation`, adduser.ConfirmForm)
+	router.GET(`/admin/adduser`, adduser.Start)
+	router.POST(`/admin/adduser`, adduser.AnswerForm)
+	router.GET(`/admin/adduserconfirmation`, adduser.ConfirmForm)
 
 	//router.GET(`/admin/addcostcenter`, addcostcenter.Start)
 	//router.POST(`/admin/addcostcenter`, addcostcenter.AnswerCostCenterForm)
@@ -55,7 +58,7 @@ func main() {
 	//router.POST(`/admin/addlocation`, addcostcenter.AnswerLocationForm)
 	//router.GET(`/admin/addcostcenterconfirmation`, addcostcenter.ConfirmForm)
 
-	router.Run(`192.168.100.160.xip.io:8080`)
+	router.Run(`127.0.0.1:8080`)
 }
 
 // randToken returns a random token of i bytes

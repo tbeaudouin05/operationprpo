@@ -3,7 +3,6 @@ package purchaserequestform
 import (
 	"encoding/json"
 	"fmt"
-	"html/template"
 	"net/http"
 	"time"
 
@@ -130,7 +129,7 @@ func AnswerForm(c *gin.Context) {
 	// then reload the page with same information + a success message
 	if purchaseRequestFormInput.IsAnotherItem == `yes` {
 		purchaseRequestFormInput.Success = `Purchase request successful: please add another item`
-		purchaseRequestFormInput.Render(c, `template/purchaserequest/purchaserequest.html`)
+		purchaseRequestFormInput.Render(c, `template/purchaserequest/purchaserequestotheritem.html`)
 		return
 	}
 
@@ -140,19 +139,9 @@ func AnswerForm(c *gin.Context) {
 
 // ConfirmForm loads the purchase request confirmation web page - GET request
 func ConfirmForm(c *gin.Context) {
-
+	purchaseRequestFormInput := &purchaserequestforminput.PurchaseRequestFormInput{}
 	// render confirmation web page
-	render(c, `template/purchaserequest/purchaserequestconfirmation.html`)
-}
-
-// Render the web page itself given the html template - no parameter
-func render(c *gin.Context, htmlTemplate string) {
-	// fetch the htmlTemplate
-	tmpl, err := template.ParseFiles(htmlTemplate)
-	handleErr(c, err)
-	// render the htmlTemplate without parameter
-	err = tmpl.Execute(c.Writer, nil)
-	handleErr(c, err)
+	purchaseRequestFormInput.Render(c, `template/purchaserequest/purchaserequestconfirmation.html`)
 }
 
 func handleErr(c *gin.Context, err error) {

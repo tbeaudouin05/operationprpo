@@ -18,6 +18,7 @@
   ,invoice_total AS unit_price*quantity
   ,vat_invoice_total AS vat_unit_price*quantity
   ,purchase_request_status VARCHAR(50)
+  ,timestamp DATETIME NOT NULL DEFAULT (GETDATE())
 );
 
 CREATE TABLE baa_application.operation.pr_cost_category (
@@ -47,11 +48,21 @@ CREATE TABLE baa_application.operation.pr_department_access (
   ,gfk_department VARCHAR(6) FOREIGN KEY REFERENCES baa_application.operation.department(gid_department)
 )
 
+  INSERT INTO  baa_application.operation.pr_department_access (
+		fk_user
+		,gfk_department)
+	VALUES (@p1, @p2)
+
 CREATE TABLE baa_application.operation.pr_location_access (
   id_location_access INT IDENTITY(1,1) PRIMARY KEY
   ,fk_user INT FOREIGN KEY REFERENCES baa_application.operation.pr_user(id_user)
   ,gfk_location VARCHAR(4) FOREIGN KEY REFERENCES baa_application.operation.location(gid_location)
 )
+
+  INSERT INTO  baa_application.operation.pr_location_access (
+  fk_user
+  ,gfk_location)
+  VALUES (@p1, @p2)
 
   CREATE TABLE baa_application.operation.pr_division_access (
   id_division_access INT IDENTITY(1,1) PRIMARY KEY
@@ -62,7 +73,7 @@ CREATE TABLE baa_application.operation.pr_location_access (
   INSERT INTO  baa_application.operation.pr_division_access (
   fk_user
   ,fk_division)
-VALUES (3, '69')
+VALUES (@p1, @p2)
 
 
 -- NB: global ID are needed when IDs are spread accross different schemas e.g. operation.location, marketing.location etc. this allows more flexibility in defining Finance codes
@@ -118,27 +129,8 @@ ALTER TABLE baa_application.operation.func
 
 -- NB: given that gid_function is unique across all divisions THEN id_cost_center is unique across all divisions
 -- view of cost_center across the whole organization
-CREATE VIEW finance.cost_center_view AS
-  SELECT 
-    fu.gid_function id_cost_center -- global ID: unique accross all divisions
-    ,CONCAT(fu.name, '-', di.name, '[',LEFT(lo.name,3),LEFT(de.name,3),']') cost_center_name
-    ,di.id_division fk_division 
-    ,di.name division_name
-    ,lo.gid_location gfk_location -- global foreign key: unique accross all divisions
-    ,lo.name location_name
-    ,de.gid_department gfk_department -- global foreign key: unique accross all divisions
-    ,de.name department_name
-    ,fu.gid_function -- global ID: unique accross all divisions
-    ,fu.name function_name
-    
-  FROM baa_application.finance.division di
-  JOIN baa_application.operation.location lo
-  ON lo.fk_division = di.id_division
-  JOIN baa_application.operation.department de
-  ON de.gfk_location = lo.gid_location
-  JOIN baa_application.operation.func fu
-  ON  fu.gfk_department = de.gid_department
-  -- UNION ALL SELECT FROM ... JOIN marketing.location lo JOIN marketing.department
+-- CREATE VIEW finance.cost_center_view AS operatio.cost_center_view UNION ALL marketing.cost_center_view etc.
+
 
 -- view of cost_center only for operation
 CREATE VIEW operation.cost_center_view AS
@@ -165,9 +157,8 @@ CREATE VIEW operation.cost_center_view AS
 INSERT INTO  baa_application.operation.pr_user (
   email
   ,name
-  ,access
-  ,gfk_department)
-VALUES ('thomas.beaudouin@bamilo.com', 'Thomas Beaudouin', 'admin', '690301')
+  ,access)
+VALUES ('thomas.beaudouin@bamilo.com', 'Thomas Beaudouin', 'admin')
 
 DELETE FROM baa_application.operation.user_access
 WHERE baa_application.operation.user_access.email = 'julien.lefebvre@bamilo.com';
@@ -193,7 +184,7 @@ INSERT INTO baa_application.operation.location (
   ,name
   ,tag
   ,tag_code
-  ) VALUES ('6901','01','FBB','FBB','01')
+  ) VALUES ('6910','01','FBB','FBB','01')
 
     DELETE FROM baa_application.operation.department
     WHERE gid_department = @p1
@@ -204,7 +195,7 @@ INSERT INTO baa_application.operation.location (
   ,name
   ,tag
   ,tag_code
-  ) VALUES ('690301','016','Consignment Inbound','CONI','016')
+  ) VALUES ('691001','001','Receiving','RECE','001')
 
 DELETE FROM baa_application.operation.purchase_request;
 DELETE FROM baa_application.operation.user_access;

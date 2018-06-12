@@ -61,8 +61,109 @@
         Name:<input type="text" name="name" value="{{ .Name }}" required>
         
         <button type="submit"> Submit </button>
-      </form>
+    </form>
+
+    <h1>Add user access</h1>
+    <div>
+        <p class="error" >{{ .Error }}</p>
+    </div>
+
+    <p>NB: access is determined by the highest level of access - meaning adding department accesses to a location access will not restrict the location access</p>
+
+    <h2>Department access</h2>
+    <form action="/admin/adddepartmentaccess" id="adddepartmentaccess" method="post">
+
+        Email:<select id="emaildepartment" name="emaildepartment" form="adddepartmentaccess" required>
+            <option value=""></option>
+            <option value="{{ .IDUser }}" selected>{{ .Email }}</option>
+            <option selected="selected">{{ .EmailDepartment }}</option>
+                    </select>
+        Department Access:<select id="departmentaccess" name="departmentaccess" form="adddepartmentaccess" required>
+        <option value=""></option>
+        <option value="{{ .GFKDepartment }}" selected>{{ .DepartmentName }}</option>
+                    </select>
+        
+        <button type="submit"> Submit </button>
+    </form>
+
+    <h2>Location access</h2>
+    <form action="/admin/addlocationaccess" id="addlocationaccess" method="post">
+
+        Email:<select id="emaillocation" name="emaillocation" form="addlocationaccess" required>
+            <option value=""></option>
+            <option value="{{ .IDUser }}" selected>{{ .Email }}</option>
+                    </select>
+        Location Access:<select id="locationaccess" name="locationaccess" form="addlocationaccess" required>
+        <option value=""></option>
+        <option value="{{ .GFKLocation }}" selected>{{ .LocationName }}</option>
+                    </select>
+        
+        <button type="submit"> Submit </button>
+    </form>
+      
+    <script>
+
+    emailDepartmentSelectElement = document.querySelector("#emaildepartment")
+    emailLocationSelectElement = document.querySelector("#emaillocation")
+    fetch("/admin/adduser/startidemail")
+      .then(userIDEmailTableByte => userIDEmailTableByte.json())
+      .then(userIDEmailTableJSON => {
+        //Once we fetch the list, we iterate over it
+        userIDEmailTableJSON.forEach(userIDEmail => {
+
+          // create the emailDepartmentOptionElement and fill it
+          emailDepartmentOptionElement = document.createElement("option")
+          emailDepartmentOptionElement.value = userIDEmail.id_user
+          emailDepartmentOptionElement.innerHTML = userIDEmail.email
+
+         // create the emailLocationOptionElement and fill it
+          emailLocationOptionElement = document.createElement("option")
+          emailLocationOptionElement.value = userIDEmail.id_user
+          emailLocationOptionElement.innerHTML = userIDEmail.email
+
+          // Finally, add the option elements to the select element itself
+          emailDepartmentSelectElement.appendChild(emailDepartmentOptionElement)
+
+        })
+      })
+
+    departmentAccessSelectElement = document.querySelector("#departmentaccess")
+      fetch("/admin/adduser/startdepartmentaccess")
+      .then(departmentAccessTableByte => departmentAccessTableByte.json())
+      .then(departmentAccessTableJSON => {
+        //Once we fetch the list, we iterate over it
+        departmentAccessTableJSON.forEach(departmentAccess => {
+
+          // create the departmentAccessOptionElement and fill it
+          departmentAccessOptionElement = document.createElement("option")
+          departmentAccessOptionElement.value = departmentAccess.gfk_department
+          departmentAccessOptionElement.innerHTML = departmentAccess.department_name
+
+          // Finally, add the option elements to the select element itself
+          departmentAccessSelectElement.appendChild(departmentAccessOptionElement)
+
+        })
+      })
+
+    locationAccessSelectElement = document.querySelector("#locationaccess")
+      fetch("/purchaserequest/startlocationaccess")
+      .then(locationAccessTableByte => locationAccessTableByte.json())
+      .then(locationAccessTableJSON => {
+        //Once we fetch the list, we iterate over it
+        locationAccessTableJSON.forEach(locationAccess => {
+
+          // create the locationAccessOptionElement and fill it
+          locationAccessOptionElement = document.createElement("option")
+          locationAccessOptionElement.value = locationAccess.gfk_location
+          locationAccessOptionElement.innerHTML = locationAccess.location_name
+
+          // Finally, add the option elements to the select element itself
+          emailLocationSelectElement.appendChild(emailLocationOptionElement)
+          locationAccessSelectElement.appendChild(locationAccessOptionElement)
+        })
+      })
       
 
+    </script>
 
 </body>

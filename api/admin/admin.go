@@ -3,7 +3,6 @@ package admin
 import (
 	"encoding/json"
 	"fmt"
-	"html/template"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -102,16 +101,6 @@ func AcceptRejectPurchaseRequest(c *gin.Context) {
 	// if everything goes well, reload web page
 	http.Redirect(c.Writer, c.Request, `/admin`, http.StatusSeeOther)
 
-}
-
-// Render the web page itself given the html template - no parameter
-func render(c *gin.Context, htmlTemplate string) {
-	// fetch the htmlTemplate
-	tmpl, err := template.ParseFiles(htmlTemplate)
-	handleErr(c, err)
-	// render the htmlTemplate without parameter
-	err = tmpl.Execute(c.Writer, nil)
-	handleErr(c, err)
 }
 
 func handleErr(c *gin.Context, err error) {

@@ -1,8 +1,8 @@
 package adduser
 
 import (
+	"encoding/json"
 	"fmt"
-	"html/template"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -48,9 +48,61 @@ func AnswerForm(c *gin.Context) {
 		return
 	}
 
-	// LoadToDb uploads the purchase request form user inputs (= addUserFormInput) to database
+	// LoadToDb uploads addUserFormInput to database
 	dbBaa := connectdb.ConnectToBaa()
 	err := us_baainteract.CreateNewUser(addUserFormInput, dbBaa)
+	handleErr(c, err)
+
+	// if everything goes well, redirect user to adduserconfirmation web page
+	http.Redirect(c.Writer, r, `/admin/adduserconfirmation`, http.StatusSeeOther)
+}
+
+// AnswerDepartmentAccessForm retrieves user inputs, validate them and upload them to database - POST request
+func AnswerDepartmentAccessForm(c *gin.Context) {
+
+	authorize.AuthorizePrAdmin(c, &user)
+
+	r := c.Request
+
+	departmentAccessFormInput := &useraccess.User{
+		IDUser:        r.FormValue(`emaildepartment`),
+		GFKDepartment: r.FormValue(`departmentaccess`),
+	}
+
+	if departmentAccessFormInput.ValidateDepartmentAccess() == false {
+		departmentAccessFormInput.Render(c, `template/admin/adduser.html`)
+		return
+	}
+
+	// LoadToDb uploads to database
+	dbBaa := connectdb.ConnectToBaa()
+	err := us_baainteract.AddUserDepartmentAccess(departmentAccessFormInput, dbBaa)
+	handleErr(c, err)
+
+	// if everything goes well, redirect user to adduserconfirmation web page
+	http.Redirect(c.Writer, r, `/admin/adduserconfirmation`, http.StatusSeeOther)
+}
+
+// AnswerLocationAccessForm retrieves user inputs, validate them and upload them to database - POST request
+func AnswerLocationAccessForm(c *gin.Context) {
+
+	authorize.AuthorizePrAdmin(c, &user)
+
+	r := c.Request
+
+	userLocationAccessFormInput := &useraccess.User{
+		IDUser:      r.FormValue(`emaillocation`),
+		GFKLocation: r.FormValue(`locationaccess`),
+	}
+
+	if userLocationAccessFormInput.ValidateLocationAccess() == false {
+		userLocationAccessFormInput.Render(c, `template/admin/adduser.html`)
+		return
+	}
+
+	// LoadToDb uploads to database
+	dbBaa := connectdb.ConnectToBaa()
+	err := us_baainteract.AddUserLocationAccess(userLocationAccessFormInput, dbBaa)
 	handleErr(c, err)
 
 	// if everything goes well, redirect user to adduserconfirmation web page
@@ -60,18 +112,61 @@ func AnswerForm(c *gin.Context) {
 // ConfirmForm loads the purchase request adduserconfirmation web page - GET request
 func ConfirmForm(c *gin.Context) {
 
+	addUserFormInput := &useraccess.User{}
+
 	// render adduserconfirmation web page
-	render(c, `template/admin/adduser/adduserconfirmation.html`)
+	addUserFormInput.Render(c, `template/admin/adduser/adduserconfirmation.html`)
 }
 
-// Render the web page itself given the html template - no parameter
-func render(c *gin.Context, htmlTemplate string) {
-	// fetch the htmlTemplate
-	tmpl, err := template.ParseFiles(htmlTemplate)
+//  - GET request
+func StartIDEmail(c *gin.Context) {
+
+	// connect to Baa database
+	dbBaa := connectdb.ConnectToBaa()
+	defer dbBaa.Close()
+
+	userIDEmailTable := us_baainteract.GetUserIDEmail(dbBaa)
+
+	//Convert to json
+	userIDEmailTableByte, err := json.Marshal(userIDEmailTable)
 	handleErr(c, err)
-	// render the htmlTemplate without parameter
-	err = tmpl.Execute(c.Writer, nil)
+
+	// If all goes well, write the JSON to the response
+	c.Writer.Write(userIDEmailTableByte)
+}
+
+//  - GET request
+func StartDepartmentAccess(c *gin.Context) {
+
+	// connect to Baa database
+	dbBaa := connectdb.ConnectToBaa()
+	defer dbBaa.Close()
+
+	departmentAccessTable := us_baainteract.GetDepartmentAccess(dbBaa)
+
+	//Convert to json
+	departmentAccessTableByte, err := json.Marshal(departmentAccessTable)
 	handleErr(c, err)
+
+	// If all goes well, write the JSON to the response
+	c.Writer.Write(departmentAccessTableByte)
+}
+
+//  - GET request
+func StartLocationAccess(c *gin.Context) {
+
+	// connect to Baa database
+	dbBaa := connectdb.ConnectToBaa()
+	defer dbBaa.Close()
+
+	locationAccessTable := us_baainteract.GetLocationAccess(dbBaa)
+
+	//Convert to json
+	locationAccessTableByte, err := json.Marshal(locationAccessTable)
+	handleErr(c, err)
+
+	// If all goes well, write the JSON to the response
+	c.Writer.Write(locationAccessTableByte)
 }
 
 func handleErr(c *gin.Context, err error) {

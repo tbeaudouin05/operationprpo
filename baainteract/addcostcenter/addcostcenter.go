@@ -82,6 +82,7 @@ func GetListOfFunctionName(dbBaa *sql.DB) string {
 	var functionName, listOfFunctionName string
 	rows, err := dbBaa.Query(query)
 	checkError(err)
+	defer rows.Close()
 	for rows.Next() {
 		err := rows.Scan(&functionName)
 		checkError(err)
@@ -118,6 +119,7 @@ func GetListOfDepartmentName(dbBaa *sql.DB) string {
 	var departmentName, listOfDepartmentName string
 	rows, err := dbBaa.Query(query)
 	checkError(err)
+	defer rows.Close()
 	for rows.Next() {
 		err := rows.Scan(&departmentName)
 		checkError(err)
@@ -159,6 +161,7 @@ func GetListOfLocationName(dbBaa *sql.DB) string {
 		checkError(err)
 		listOfLocationName += locationName + `,`
 	}
+	defer rows.Close()
 	listOfLocationName = listOfLocationName[:len(listOfLocationName)-1]
 	return listOfLocationName
 
