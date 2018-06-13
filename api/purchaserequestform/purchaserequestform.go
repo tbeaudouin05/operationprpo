@@ -97,6 +97,7 @@ func AnswerForm(c *gin.Context) {
 		CostCenter:         r.FormValue(`costCenter`),
 		Initiator:          user.Name,
 		PrType:             r.FormValue(`prType`),
+		CostType:           r.FormValue(`costType`),
 		CostCategory:       r.FormValue(`costCategory`),
 		InvoiceNumber:      r.FormValue(`invoiceNumber`),
 		InvoiceDate:        r.FormValue(`invoiceDate`),
@@ -104,13 +105,17 @@ func AnswerForm(c *gin.Context) {
 		ItemDescription:    r.FormValue(`itemDescription`),
 		UnitPrice:          r.FormValue(`unitPrice`),
 		VatUnitPrice:       r.FormValue(`vatUnitPrice`),
-		Quantity:           r.FormValue(`quantity`),
+		Quantity:           `1`,
 		PaymentTerm:        r.FormValue(`paymentTerm`),
 		PaymentInstallment: r.FormValue(`paymentInstallment`),
 		PaymentCenter:      r.FormValue(`paymentCenter`),
 		PaymentType:        r.FormValue(`paymentType`),
 
 		IsAnotherItem: r.FormValue(`isAnotherItem`),
+	}
+
+	if purchaseRequestFormInput.PrType == `Quantitative` {
+		purchaseRequestFormInput.ChangeQuantity(r.FormValue(`quantity`))
 	}
 
 	// Validate validates the purchaseRequestFormInput form user inputs

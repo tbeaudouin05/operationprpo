@@ -21,12 +21,14 @@ type User struct {
 	EmailVerified bool   `json:"email_verified"`
 	Gender        string `json:"gender"`
 	HD            string `json:"hd"`
-	Access        string `json:"access"`
 	LoginURL      string `json:"login_url"`
 
-	IDUser string `json:"id_user"`
-	Email  string `json:"email"`
-	Name   string `json:"name"`
+	IDUser           string `json:"id_user"`
+	Email            string `json:"email"`
+	Name             string `json:"name"`
+	Access           string `json:"access"`
+	LocationAccess   string `json:"location_access"`
+	DepartmentAccess string `json:"department_access"`
 
 	// to allow user access to department
 	GFKDepartment  string `json:"gfk_department"`

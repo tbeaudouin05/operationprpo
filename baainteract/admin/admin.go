@@ -12,9 +12,11 @@ func GetPendingPurchaseRequest(dbBaa *sql.DB) []*purchaserequestforminput.Purcha
 	rows, err := dbBaa.Query(`
 		SELECT 
 		pr.id_purchase_request
+		,CONVERT(VARCHAR(50), pr.pr_timestamp, 100) pr_timestamp
 		,f.name cost_center  
 		,pr.initiator  
-		,pr.pr_type  
+		,pr.pr_type
+		,pr.cost_type  
 		,pcc.name_fa cost_category  
 		,pr.invoice_number  
 		,CONVERT(VARCHAR(50), pr.invoice_date, 101) invoice_date
@@ -42,7 +44,7 @@ func GetPendingPurchaseRequest(dbBaa *sql.DB) []*purchaserequestforminput.Purcha
 
 	// We return incase of an error, and defer the closing of the row structure
 	checkError(err)
-	//defer rows.Close()
+	defer rows.Close()
 
 	// Create the data structure that is returned from the function.
 	purchaseRequestFormInputTable := []*purchaserequestforminput.PurchaseRequestFormInput{}
@@ -53,9 +55,11 @@ func GetPendingPurchaseRequest(dbBaa *sql.DB) []*purchaserequestforminput.Purcha
 		// and return incase of an error
 		err := rows.Scan(
 			&purchaseRequestFormInput.IDPurchaseRequest,
+			&purchaseRequestFormInput.Timestamp,
 			&purchaseRequestFormInput.CostCenter,
 			&purchaseRequestFormInput.Initiator,
 			&purchaseRequestFormInput.PrType,
+			&purchaseRequestFormInput.CostType,
 			&purchaseRequestFormInput.CostCategory,
 			&purchaseRequestFormInput.InvoiceNumber,
 			&purchaseRequestFormInput.InvoiceDate,
@@ -139,4 +143,3 @@ func checkError(err error) {
 		log.Fatal(err.Error())
 	}
 }
-

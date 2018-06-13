@@ -5,6 +5,23 @@
 <head>
 <title>User registration</title>
 <style>
+
+          table tr:nth-child(even) {
+  background-color: #eee;
+  }
+  tr:nth-child(odd) {
+    background-color: #fff;
+  }  
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 5px;
+    }
+    th, td {
+        text-align: center;
+    }
         input[type=text], input[type=number], select {
             width: 100%;
             padding: 10px 15px;
@@ -35,6 +52,31 @@
             background-color: #f2f2f2;
             padding: 10px;
         }
+
+                .container {
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 20px;
+        }
+
+        .col_access {
+            float: left;
+            width: 30%;
+            margin-top: 6px;
+        }
+
+        .col_location_access {
+            float: left;
+            width: 30%;
+            margin-top: 6px;
+        }
+
+        .col_department_access {
+            float: left;
+            width: 30%;
+            margin-top: 6px;
+        }
+
         </style>
 
 <style type="text/css">.error {color: red;}</style>
@@ -71,7 +113,7 @@
     <p>NB: access is determined by the highest level of access - meaning adding department accesses to a location access will not restrict the location access</p>
 
     <h2>Department access</h2>
-    <form action="/admin/adddepartmentaccess" id="adddepartmentaccess" method="post">
+    <form action="/adduser/addepartmentaccess" id="adddepartmentaccess" method="post">
 
         Email:<select id="emaildepartment" name="emaildepartment" form="adddepartmentaccess" required>
             <option value=""></option>
@@ -87,7 +129,7 @@
     </form>
 
     <h2>Location access</h2>
-    <form action="/admin/addlocationaccess" id="addlocationaccess" method="post">
+    <form action="/adduser/addlocationaccess" id="addlocationaccess" method="post">
 
         Email:<select id="emaillocation" name="emaillocation" form="addlocationaccess" required>
             <option value=""></option>
@@ -100,6 +142,38 @@
         
         <button type="submit"> Submit </button>
     </form>
+
+
+    <div class="container">
+            <div class="col_access">
+                  <table id="access_table">
+                          <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>App Access</th>
+                          </tr>
+                  </table>
+            </div>
+            <div class="col_location_access">
+                  <table id="location_access_table">
+                          <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Location Access</th>
+                          </tr>
+                  </table>
+            </div>
+            <div class="col_department_access">
+                  <table id="department_access_table">
+                          <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Department Access</th>
+                          </tr>
+                  </table>
+            </div>
+            
+      </div>
       
     <script>
 
@@ -123,6 +197,8 @@
 
           // Finally, add the option elements to the select element itself
           emailDepartmentSelectElement.appendChild(emailDepartmentOptionElement)
+          emailLocationSelectElement.appendChild(emailLocationOptionElement)
+
 
         })
       })
@@ -146,7 +222,7 @@
       })
 
     locationAccessSelectElement = document.querySelector("#locationaccess")
-      fetch("/purchaserequest/startlocationaccess")
+      fetch("/admin/adduser/startlocationaccess")
       .then(locationAccessTableByte => locationAccessTableByte.json())
       .then(locationAccessTableJSON => {
         //Once we fetch the list, we iterate over it
@@ -158,8 +234,90 @@
           locationAccessOptionElement.innerHTML = locationAccess.location_name
 
           // Finally, add the option elements to the select element itself
-          emailLocationSelectElement.appendChild(emailLocationOptionElement)
           locationAccessSelectElement.appendChild(locationAccessOptionElement)
+        })
+      })
+
+
+    existingUserAccessTable = document.querySelector("#access_table")
+    fetch("/admin/adduser/startExistingUserAccess")
+      .then(resExistingAccess => resExistingAccess.json())
+      .then(resExistingAccessJSON => {
+        //Once we fetch the list, we iterate over it
+        resExistingAccessJSON.forEach(existingUserAccess => {
+          // Create the table rowExistingAccess
+          rowExistingAccess = document.createElement("tr")
+ 
+        // add data elements to the rowExistingAccess
+          access_name = document.createElement("td")
+          access_name.innerHTML = existingUserAccess.name
+          access_email = document.createElement("td")
+          access_email.innerHTML = existingUserAccess.email
+          access = document.createElement("td")
+          access.innerHTML = existingUserAccess.access
+
+          // Add the data elements to the rowExistingAccess
+          rowExistingAccess.appendChild(access_name)
+          rowExistingAccess.appendChild(access_email)
+          rowExistingAccess.appendChild(access)
+
+          // Finally, add the rowExistingAccess element to the table itself
+          existingUserAccessTable.appendChild(rowExistingAccess)
+        })
+      })
+
+
+        existingUserLocationAccessTable = document.querySelector("#location_access_table")
+        fetch("/admin/adduser/startExistingUserLocationAccess")
+      .then(resExistingLocationAccess => resExistingLocationAccess.json())
+      .then(resExistingLocationAccessJSON => {
+        //Once we fetch the list, we iterate over it
+        resExistingLocationAccessJSON.forEach(existingUserLocationAccess => {
+          // Create the table rowExistingLocationAccess
+          rowExistingLocationAccess = document.createElement("tr")
+ 
+        // add data elements to the rowExistingLocationAccess
+          location_name = document.createElement("td")
+          location_name.innerHTML = existingUserLocationAccess.name
+          location_email = document.createElement("td")
+          location_email.innerHTML = existingUserLocationAccess.email
+          location_access = document.createElement("td")
+          location_access.innerHTML = existingUserLocationAccess.location_access
+
+          // Add the data elements to the rowExistingLocationAccess
+          rowExistingLocationAccess.appendChild(location_name)
+          rowExistingLocationAccess.appendChild(location_email)
+          rowExistingLocationAccess.appendChild(location_access)
+
+          // Finally, add the rowExistingLocationAccess element to the table itself
+          existingUserLocationAccessTable.appendChild(rowExistingLocationAccess)
+        })
+      })
+
+        existingUserDepartmentAccessTable = document.querySelector("#department_access_table")
+        fetch("/admin/adduser/startExistingUserDepartmentAccess")
+      .then(resExistingDepartmentAccess => resExistingDepartmentAccess.json())
+      .then(resExistingDepartmentAccessJSON => {
+        //Once we fetch the list, we iterate over it
+        resExistingDepartmentAccessJSON.forEach(existingUserDepartmentAccess => {
+          // Create the table rowExistingDepartmentAccess
+          rowExistingDepartmentAccess = document.createElement("tr")
+ 
+        // add data elements to the rowExistingDepartmentAccess
+          department_name = document.createElement("td")
+          department_name.innerHTML = existingUserDepartmentAccess.name
+          department_email = document.createElement("td")
+          department_email.innerHTML = existingUserDepartmentAccess.email
+          department_access = document.createElement("td")
+          department_access.innerHTML = existingUserDepartmentAccess.department_access
+
+          // Add the data elements to the rowExistingDepartmentAccess
+          rowExistingDepartmentAccess.appendChild(department_name)
+          rowExistingDepartmentAccess.appendChild(department_email)
+          rowExistingDepartmentAccess.appendChild(department_access)
+
+          // Finally, add the rowExistingDepartmentAccess element to the table itself
+          existingUserDepartmentAccessTable.appendChild(rowExistingDepartmentAccess)
         })
       })
       

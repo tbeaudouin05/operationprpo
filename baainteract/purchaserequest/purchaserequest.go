@@ -17,7 +17,8 @@ func LoadPurchaseRequestToDb(purchaseRequestFormInput *purchaserequestforminput.
 INSERT INTO baa_application.operation.purchase_request (
 	gfk_cost_center  
 	,initiator  
-	,pr_type  
+	,pr_type
+	,cost_type  
 	,fk_cost_category  
 	,invoice_number  
 	,invoice_date  
@@ -31,13 +32,14 @@ INSERT INTO baa_application.operation.purchase_request (
 	,payment_center   
 	,payment_type
 	,purchase_request_status) 
-VALUES (@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9,@p10,@p11,@p12,@p13,@p14,@p15,'pending')`
+VALUES (@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9,@p10,@p11,@p12,@p13,@p14,@p15,@p16,'pending')`
 	insertPurchaseRequest, err := dbBaa.Prepare(insertPurchaseRequestStr)
 
 	res, err := insertPurchaseRequest.Exec(
 		purchaseRequestFormInput.CostCenter,
 		purchaseRequestFormInput.Initiator,
 		purchaseRequestFormInput.PrType,
+		purchaseRequestFormInput.CostType,
 		purchaseRequestFormInput.CostCategory,
 		purchaseRequestFormInput.InvoiceNumber,
 		purchaseRequestFormInput.InvoiceDate,
@@ -61,7 +63,7 @@ func GetAvailableCostCenter(dbBaa *sql.DB, iDUser string) []*costcenter.CostCent
 
 	stmt, err := dbBaa.Prepare(`
 	SELECT 
-	ccv.id_cost_center
+	ccv.gid_cost_center
 	,ccv.cost_center_name
 		
 	 FROM baa_application.operation.cost_center_view ccv
@@ -172,4 +174,3 @@ func checkError(err error) {
 		log.Fatal(err.Error())
 	}
 }
-

@@ -83,9 +83,11 @@
   <table>
     <tr>
       <th>ID Purchase Request</th>
+      <th>PR Timestamp</th>
       <th>Cost Center</th>
 			<th>Initiator</th>
-			<th>PR Type</th>
+      <th>PR Type</th>
+      <th>Cost Type</th>
 			<th>Cost Category</th>
 			<th>Invoice Number</th>
 			<th>Invoice Date</th>
@@ -140,12 +142,16 @@ iDPurchaseRequestSelectElement = document.querySelector("#admin > select:nth-chi
 					// description columns
           id_purchase_request = document.createElement("td")
           id_purchase_request.innerHTML = templateParameter.id_purchase_request
+          timestamp = document.createElement("td")
+          timestamp.innerHTML = templateParameter.timestamp
           cost_center = document.createElement("td")
           cost_center.innerHTML = templateParameter.cost_center
           initiator = document.createElement("td")
           initiator.innerHTML = templateParameter.initiator
           pr_type = document.createElement("td")
           pr_type.innerHTML = templateParameter.pr_type
+          cost_type = document.createElement("td")
+          cost_type.innerHTML = templateParameter.cost_type
           cost_category = document.createElement("td")
           cost_category.innerHTML = templateParameter.cost_category
           invoice_number = document.createElement("td")
@@ -177,9 +183,11 @@ iDPurchaseRequestSelectElement = document.querySelector("#admin > select:nth-chi
 
           // Add the data elements to the row
           row.appendChild(id_purchase_request)
+          row.appendChild(timestamp)
           row.appendChild(cost_center)
           row.appendChild(initiator)
           row.appendChild(pr_type)
+          row.appendChild(cost_type)
           row.appendChild(cost_category)
           row.appendChild(invoice_number)
           row.appendChild(invoice_date)

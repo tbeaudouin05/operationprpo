@@ -44,7 +44,8 @@ func AnswerForm(c *gin.Context) {
 	// Validate validates the addUserFormInput form user inputs
 	// if validation fails, reload the purchase request form page with the initial user inputs and error messages
 	if addUserFormInput.Validate() == false {
-		addUserFormInput.Render(c, `template/admin/adduser.html`)
+
+		addUserFormInput.Render(c, `template/admin/adduser/adduser.html`)
 		return
 	}
 
@@ -70,7 +71,7 @@ func AnswerDepartmentAccessForm(c *gin.Context) {
 	}
 
 	if departmentAccessFormInput.ValidateDepartmentAccess() == false {
-		departmentAccessFormInput.Render(c, `template/admin/adduser.html`)
+		departmentAccessFormInput.Render(c, `template/admin/adduser/adduser.html`)
 		return
 	}
 
@@ -96,7 +97,7 @@ func AnswerLocationAccessForm(c *gin.Context) {
 	}
 
 	if userLocationAccessFormInput.ValidateLocationAccess() == false {
-		userLocationAccessFormInput.Render(c, `template/admin/adduser.html`)
+		userLocationAccessFormInput.Render(c, `template/admin/adduser/adduser.html`)
 		return
 	}
 
@@ -167,6 +168,57 @@ func StartLocationAccess(c *gin.Context) {
 
 	// If all goes well, write the JSON to the response
 	c.Writer.Write(locationAccessTableByte)
+}
+
+//  - GET request
+func StartExistingUserAccess(c *gin.Context) {
+
+	// connect to Baa database
+	dbBaa := connectdb.ConnectToBaa()
+	defer dbBaa.Close()
+
+	existingUserAccessTable := us_baainteract.GetExistingUserAccess(dbBaa)
+
+	//Convert to json
+	existingUserAccessTableByte, err := json.Marshal(existingUserAccessTable)
+	handleErr(c, err)
+
+	// If all goes well, write the JSON to the response
+	c.Writer.Write(existingUserAccessTableByte)
+}
+
+//  - GET request
+func StartExistingUserLocationAccess(c *gin.Context) {
+
+	// connect to Baa database
+	dbBaa := connectdb.ConnectToBaa()
+	defer dbBaa.Close()
+
+	existingUserLocationAccessTable := us_baainteract.GetExistingUserLocationAccess(dbBaa)
+
+	//Convert to json
+	existingUserLocationAccessTableByte, err := json.Marshal(existingUserLocationAccessTable)
+	handleErr(c, err)
+
+	// If all goes well, write the JSON to the response
+	c.Writer.Write(existingUserLocationAccessTableByte)
+}
+
+//  - GET request
+func StartExistingUserDepartmentAccess(c *gin.Context) {
+
+	// connect to Baa database
+	dbBaa := connectdb.ConnectToBaa()
+	defer dbBaa.Close()
+
+	existingUserDepartmentAccessTable := us_baainteract.GetExistingUserDepartmentAccess(dbBaa)
+
+	//Convert to json
+	existingUserDepartmentAccessTableByte, err := json.Marshal(existingUserDepartmentAccessTable)
+	handleErr(c, err)
+
+	// If all goes well, write the JSON to the response
+	c.Writer.Write(existingUserDepartmentAccessTableByte)
 }
 
 func handleErr(c *gin.Context, err error) {

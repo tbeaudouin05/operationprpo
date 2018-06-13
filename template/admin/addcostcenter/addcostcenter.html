@@ -5,6 +5,25 @@
 <head>
 <title>Cost Center registration</title>
 <style>
+
+
+      table tr:nth-child(even) {
+  background-color: #eee;
+  }
+  tr:nth-child(odd) {
+    background-color: #fff;
+  }  
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 5px;
+    }
+    th, td {
+        text-align: center;
+    }
+
         input[type=text], input[type=number], select {
             width: 100%;
             padding: 10px 15px;
@@ -35,6 +54,37 @@
             background-color: #f2f2f2;
             padding: 10px;
         }
+
+        .container {
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 20px;
+        }
+
+        .col_function_name {
+            float: left;
+            width: 25%;
+            margin-top: 6px;
+        }
+
+        .col_cost_center_name {
+            float: left;
+            width: 25%;
+            margin-top: 6px;
+        }
+
+        .col_department_name {
+            float: left;
+            width: 25%;
+            margin-top: 6px;
+        }
+
+        .col_location_name {
+            float: right;
+            width: 25%;
+            margin-top: 6px;
+        }
+
         </style>
 
 <style type="text/css">.error {color: red;}</style>
@@ -50,51 +100,232 @@
     </li>
 </ul>
 
-    <h1>Register new cost center</h1>
+    <h1>Register new function</h1>
     <div>
         <p class="error" >{{ .Error }}</p>
     </div>
 
-    <form action="/admin/addcostcenter" id="addcostcenter" method="post">
-        Department GID:<select id="GFKDepartment" name="GFKDepartment" form="addcostcenter" required>
+    <form action="/addcostcenter/addfunction" id="addfunction" method="post">
+        Department Name:<select id="departmentaccess" name="DepartmentName" form="addfunction" required>
             <option value=""></option>
-            <option selected="selected">{{ .GFKDepartment }}</option>
-                    </select>
-        Function Name:<input type="text" name="FunctionName" pattern="[0-9]{3}" title="3 digits" value="{{ .FunctionName }}" required>
+            <option value="{{ .GFKDepartment }}" selected>{{ .DepartmentName }}</option>
+                        </select>
+        Function Code:<input type="text" name="FunctionCode" pattern="[0-9]{3}" title="3 digits | ex: 123" value="{{ .FunctionCode }}" required>
+        Function Name:<input type="text" maxlength="100" name="FunctionName" value="{{ .FunctionName }}" required>
+        Function Tag:<input type="text" name="FunctionTag" pattern="[A-Z]{4}" title="4 capital letters | ex: ABCD" value="{{ .FunctionTag }}" required>
+        Function Tag Code:<input type="text" name="FunctionTagCode" pattern="[0-9]{3}" title="3 digits | ex: 123" value="{{ .FunctionTagCode }}">
+        Function Name Farsi:<input type="text" maxlength="100" name="FunctionNameFarsi" value="{{ .FunctionNameFarsi }}" required>
         
         <button type="submit"> Submit </button>
-      </form>
+    </form>
 
-      <h1>Register new department</h1>
-      <div>
-          <p class="error" >{{ .Error }}</p>
-      </div>
-  
-      <form action="/admin/adddepartment" id="adddepartment" method="post">
-          Location GID:<select id="GFKLocation" name="GFKLocation" form="adddepartment" required>
-              <option value=""></option>
-              <option selected="selected">{{ .GFKLocation }}</option>
-                      </select>
-          Department Name:<input type="text" name="DepartmentName" pattern="[0-9]{2}" title="2 digits" value="{{ .DepartmentName }}" required>
-          
-          <button type="submit"> Submit </button>
-        </form>
+    <h1>Register new department</h1>
+    <div>
+        <p class="error" >{{ .Error }}</p>
+    </div>
 
-        <h1>Register new location</h1>
-        <div>
-            <p class="error" >{{ .Error }}</p>
-        </div>
-    
-        <form action="/admin/addlocation" id="addlocation" method="post">
-            Division GID:<select id="FKDivision" name="FKDivision" form="addlocation" required>
-                <option value=""></option>
-                <option selected="selected">{{ .FKDivision }}</option>
+    <form action="/addcostcenter/adddepartment" id="adddepartment" method="post">
+        Location Name:<select id="locationaccess" name="LocationName" form="adddepartment" required>
+            <option value=""></option>
+            <option value="{{ .GFKLocation }}" selected>{{ .LocationName }}</option>
                         </select>
-            Location Name:<input type="text" name="LocationName" pattern="[0-9]{2}" title="2 digits" value="{{ .LocationName }}" required>
-            
-            <button type="submit"> Submit </button>
-          </form>
-      
+        Department Code:<input type="text" name="DepartmentCode" pattern="[0-9]{2}" title="2 digits | ex: 12" value="{{ .DepartmentCode }}" required>
+        Department Name:<input type="text" maxlength="100" name="DepartmentName" value="{{ .DepartmentName }}" required>
+        Department Tag:<input type="text" name="DepartmentTag" pattern="[A-Z]{3}" title="3 capital letters | ex: ABC" value="{{ .DepartmentTag }}" required>
+        Department Tag Code:<input type="text" name="DepartmentTagCode" pattern="[0-9]{2}" title="2 digits | ex: 12" value="{{ .DepartmentTagCode }}">
+        Department Name Farsi:<input type="text" maxlength="100" name="DepartmentNameFarsi" value="{{ .DepartmentNameFarsi }}" required>
+        
+        <button type="submit"> Submit </button>
+    </form>
+
+    <h1>Register new location</h1>
+    <div>
+        <p class="error" >{{ .Error }}</p>
+    </div>
+
+    <form action="/addcostcenter/addlocation" id="addlocation" method="post">
+        Location Code:<input type="text" name="LocationCode" pattern="[0-9]{2}" title="2 digits | ex: 12" value="{{ .LocationCode }}" required>
+        Location Name:<input type="text" maxlength="100" name="LocationName" value="{{ .LocationName }}" required>
+        Location Tag:<input type="text" name="LocationTag" pattern="[A-Z]{3}" title="3 capital letters | ex: ABC" value="{{ .LocationTag }}" required>
+        Location Tag Code:<input type="text" name="LocationTagCode" pattern="[0-9]{2}" title="2 digits | ex: 12" value="{{ .LocationTagCode }}">
+        Location Name Farsi:<input type="text" maxlength="100" name="LocationNameFarsi" value="{{ .LocationNameFarsi }}" required>
+        
+        <button type="submit"> Submit </button>
+    </form>
+
+    <div class="container">
+              <div class="col_function_name">
+                    <table id="function_name_table">
+                            <tr>
+                              <th>Function Code</th>
+                              <th>Function Name</th>
+                            </tr>
+                    </table>
+              </div>
+              <div class="col_cost_center_name">
+                    <table id="cost_center_name_table">
+                            <tr>
+                              <th>Cost Center GID</th>
+                              <th>Cost Center Name</th>
+                            </tr>
+                    </table>
+              </div>
+              <div class="col_department_name">
+                    <table id="department_name_table">
+                            <tr>
+                              <th>Department GID</th>
+                              <th>Department Name</th>
+                            </tr>
+                    </table>
+              </div>
+              <div class="col_location_name">
+                    <table id="location_name_table">
+                            <tr>
+                              <th>Location GID</th>
+                              <th>Location Name</th>
+                            </tr>
+                    </table>
+              </div>
+              
+        </div>
+
+      <script>
+      departmentAccessSelectElement = document.querySelector("#departmentaccess")
+      fetch("/admin/adduser/startdepartmentaccess")
+      .then(departmentAccessTableByte => departmentAccessTableByte.json())
+      .then(departmentAccessTableJSON => {
+        //Once we fetch the list, we iterate over it
+        departmentAccessTableJSON.forEach(departmentAccess => {
+
+          // create the departmentAccessOptionElement and fill it
+          departmentAccessOptionElement = document.createElement("option")
+          departmentAccessOptionElement.value = departmentAccess.gfk_department
+          departmentAccessOptionElement.innerHTML = departmentAccess.department_name
+
+          // Finally, add the option elements to the select element itself
+          departmentAccessSelectElement.appendChild(departmentAccessOptionElement)
+
+        })
+      })
+
+    locationAccessSelectElement = document.querySelector("#locationaccess")
+      fetch("/admin/adduser/startlocationaccess")
+      .then(locationAccessTableByte => locationAccessTableByte.json())
+      .then(locationAccessTableJSON => {
+        //Once we fetch the list, we iterate over it
+        locationAccessTableJSON.forEach(locationAccess => {
+
+          // create the locationAccessOptionElement and fill it
+          locationAccessOptionElement = document.createElement("option")
+          locationAccessOptionElement.value = locationAccess.gfk_location
+          locationAccessOptionElement.innerHTML = locationAccess.location_name
+
+          // Finally, add the option elements to the select element itself
+          locationAccessSelectElement.appendChild(locationAccessOptionElement)
+        })
+      })
+
+// cost center ---------------------------------------------------------------------------------------
+    existingFunctionNameTable = document.querySelector("#function_name_table")
+    fetch("/admin/addcostcenter/startexistingfunctionname")
+      .then(resExistingFunctionName => resExistingFunctionName.json())
+      .then(resExistingFunctionNameJSON => {
+        //Once we fetch the list, we iterate over it
+        resExistingFunctionNameJSON.forEach(existingFunctionName => {
+          // Create the table rowExistingFunctionName
+          rowExistingFunctionName = document.createElement("tr")
+ 
+        // add data elements to the rowExistingFunctionName
+          function_code = document.createElement("td")
+          function_code.innerHTML = existingFunctionName.function_code
+          function_name = document.createElement("td")
+          function_name.innerHTML = existingFunctionName.function_name
+
+          // Add the data elements to the rowExistingFunctionName
+          rowExistingFunctionName.appendChild(function_code)
+          rowExistingFunctionName.appendChild(function_name)
+
+          // Finally, add the rowExistingFunctionName element to the table itself
+          existingFunctionNameTable.appendChild(rowExistingFunctionName)
+        })
+      })
+
+    existingCostCenterNameTable = document.querySelector("#cost_center_name_table")
+    fetch("/admin/addcostcenter/startexistingcostcentername")
+      .then(resExistingCostCenterName => resExistingCostCenterName.json())
+      .then(resExistingCostCenterNameJSON => {
+        //Once we fetch the list, we iterate over it
+        resExistingCostCenterNameJSON.forEach(existingCostCenterName => {
+          // Create the table rowExistingCostCenterName
+          rowExistingCostCenterName = document.createElement("tr")
+ 
+        // add data elements to the rowExistingCostCenterName
+          gid_function = document.createElement("td")
+          gid_function.innerHTML = existingCostCenterName.gid_function
+          function_name = document.createElement("td")
+          function_name.innerHTML = existingCostCenterName.function_name
+
+          // Add the data elements to the rowExistingCostCenterName
+          rowExistingCostCenterName.appendChild(gid_function)
+          rowExistingCostCenterName.appendChild(function_name)
+
+          // Finally, add the rowExistingCostCenterName element to the table itself
+          existingCostCenterNameTable.appendChild(rowExistingCostCenterName)
+        })
+      })
+
+// department -------------------------------------------------------------------------------------------------------
+    existingDepartmentNameTable = document.querySelector("#department_name_table")
+    fetch("/admin/addcostcenter/startexistingdepartmentname")
+      .then(resExistingDepartmentName => resExistingDepartmentName.json())
+      .then(resExistingDepartmentNameJSON => {
+        //Once we fetch the list, we iterate over it
+        resExistingDepartmentNameJSON.forEach(existingDepartmentName => {
+          // Create the table rowExistingDepartmentName
+          rowExistingDepartmentName = document.createElement("tr")
+ 
+        // add data elements to the rowExistingDepartmentName
+          gid_department = document.createElement("td")
+          gid_department.innerHTML = existingDepartmentName.gid_department
+          department_name = document.createElement("td")
+          department_name.innerHTML = existingDepartmentName.department_name
+
+          // Add the data elements to the rowExistingDepartmentName
+          rowExistingDepartmentName.appendChild(gid_department)
+          rowExistingDepartmentName.appendChild(department_name)
+
+          // Finally, add the rowExistingDepartmentName element to the table itself
+          existingDepartmentNameTable.appendChild(rowExistingDepartmentName)
+        })
+      })
+
+
+// location -----------------------------------------------------------------------------------------------
+    existingLocationNameTable = document.querySelector("#location_name_table")
+    fetch("/admin/addcostcenter/startexistinglocationname")
+      .then(resExistingLocationName => resExistingLocationName.json())
+      .then(resExistingLocationNameJSON => {
+        //Once we fetch the list, we iterate over it
+        resExistingLocationNameJSON.forEach(existingLocationName => {
+          // Create the table rowExistingLocationName
+          rowExistingLocationName = document.createElement("tr")
+ 
+        // add data elements to the rowExistingLocationName
+          gid_location = document.createElement("td")
+          gid_location.innerHTML = existingLocationName.gid_location
+          location_name = document.createElement("td")
+          location_name.innerHTML = existingLocationName.location_name
+
+          // Add the data elements to the rowExistingLocationName
+          rowExistingLocationName.appendChild(gid_location)
+          rowExistingLocationName.appendChild(location_name)
+
+          // Finally, add the rowExistingLocationName element to the table itself
+          existingLocationNameTable.appendChild(rowExistingLocationName)
+        })
+      })
+
+      </script>
 
 
 </body>

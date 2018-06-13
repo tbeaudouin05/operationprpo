@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/thomas-bamilo/operation/operationprpo/api/admin"
+	"github.com/thomas-bamilo/operation/operationprpo/api/admin/addcostcenter"
 	"github.com/thomas-bamilo/operation/operationprpo/api/admin/adduser"
 	"github.com/thomas-bamilo/operation/operationprpo/api/homepage"
 	"github.com/thomas-bamilo/operation/operationprpo/api/oauth/authenticate"
@@ -49,14 +50,31 @@ func main() {
 	router.POST(`/admin`, admin.AcceptRejectPurchaseRequest)
 
 	router.GET(`/admin/adduser`, adduser.Start)
+	// add user access
+	router.GET(`/admin/adduser/startidemail`, adduser.StartIDEmail)
+	router.GET(`/admin/adduser/startdepartmentaccess`, adduser.StartDepartmentAccess)
+	router.GET(`/admin/adduser/startlocationaccess`, adduser.StartLocationAccess)
 	router.POST(`/admin/adduser`, adduser.AnswerForm)
+	router.POST(`/adduser/addepartmentaccess`, adduser.AnswerDepartmentAccessForm)
+	router.POST(`/adduser/addlocationaccess`, adduser.AnswerLocationAccessForm)
 	router.GET(`/admin/adduserconfirmation`, adduser.ConfirmForm)
+	// see user access
+	router.GET(`/admin/adduser/startExistingUserAccess`, adduser.StartExistingUserAccess)
+	router.GET(`/admin/adduser/startExistingUserLocationAccess`, adduser.StartExistingUserLocationAccess)
+	router.GET(`/admin/adduser/startExistingUserDepartmentAccess`, adduser.StartExistingUserDepartmentAccess)
 
-	//router.GET(`/admin/addcostcenter`, addcostcenter.Start)
-	//router.POST(`/admin/addcostcenter`, addcostcenter.AnswerCostCenterForm)
-	//router.POST(`/admin/adddepartment`, addcostcenter.AnswerDepartmentForm)
-	//router.POST(`/admin/addlocation`, addcostcenter.AnswerLocationForm)
-	//router.GET(`/admin/addcostcenterconfirmation`, addcostcenter.ConfirmForm)
+	router.GET(`/admin/addcostcenter`, addcostcenter.Start)
+	router.GET(`/admin/addcostcenterconfirmation`, addcostcenter.ConfirmForm)
+	// cost center
+	router.POST(`/addcostcenter/addfunction`, addcostcenter.AnswerCostCenterForm)
+	router.GET(`/admin/addcostcenter/startexistingfunctionname`, addcostcenter.StartExistingFunctionName)
+	router.GET(`/admin/addcostcenter/startexistingcostcentername`, addcostcenter.StartExistingCostCenterName)
+	// department
+	router.POST(`/addcostcenter/adddepartment`, addcostcenter.AnswerDepartmentForm)
+	router.GET(`/admin/addcostcenter/startexistingdepartmentname`, addcostcenter.StartExistingDepartmentName)
+	// location
+	router.POST(`/addcostcenter/addlocation`, addcostcenter.AnswerLocationForm)
+	router.GET(`/admin/addcostcenter/startexistinglocationname`, addcostcenter.StartExistingLocationName)
 
 	router.Run(`127.0.0.1:8080`)
 }

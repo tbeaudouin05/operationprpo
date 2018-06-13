@@ -58,7 +58,7 @@
         <input type="hidden" name="isAnotherItem" value="yes">
         <input type="hidden" id="costCenter" name="costCenter" value="{{ .CostCenter }}">
         <input type="hidden" name="prType" value="{{ .PrType }}">
-        <input type="hidden" id="costCategory" name="costCategory" value="{{ .CostCategory }}">
+        <input type="hidden" name="costType" value="{{ .CostType }}">
         <input type="hidden" name="invoiceNumber" value="{{ .InvoiceNumber }}">
         <input type="hidden" id="invoiceDate" name="invoiceDate" value="{{ .InvoiceDate }}">
         <input type="hidden" name="vendorName" value="{{ .VendorName }}">
@@ -67,13 +67,42 @@
         <input type="hidden" name="paymentCenter" value="{{ .PaymentCenter }}">
         <input type="hidden" name="paymentType" value="{{ .PaymentType }}">
 
+        Cost Category:<select id="costCategory" name="costCategory" form="purchaserequest" required>
+                <option value=""></option>
+                <option selected="selected" value="{{ .CostCategory }}">Same Cost Category as previous item</option>
+        </select>
         Item Description:<input type="text" name="itemDescription" value="{{ .ItemDescription }}" required>
         Unit Price IRR:<input type="number" step="0.01" min=0 name="unitPrice" value="{{ .UnitPrice }}" required>
         VAT Unit Price IRR:<input type="number" step="0.01" min=0 name="vatUnitPrice" value="{{ .VatUnitPrice }}" required>
-        Quantity:<input type="number" step="1" min=0 name="quantity" value="{{ .Quantity }}" required>
+        Quantity (if non-quantitative, will always be 1):<input type="number" step="1" min=0 name="quantity" value="{{ .Quantity }}" required>
        
         <button type="submit"> Submit </button>
       </form>
       
 
 </body>
+
+<script>       
+
+
+
+        costCategorySelectElement = document.querySelector("#costCategory")
+      fetch("/purchaserequest/startcostcategory")
+      .then(costCategoryTableByte => costCategoryTableByte.json())
+      .then(costCategoryTableJSON => {
+        //Once we fetch the list, we iterate over it
+        costCategoryTableJSON.forEach(costCategory => {
+
+          // create the <option> element and fill it
+          costCategoryOptionElement = document.createElement("option")
+          costCategoryOptionElement.value = costCategory.id_cost_category
+          costCategoryOptionElement.innerHTML = costCategory.name_fa
+
+          // Finally, add the option element to the select element itself
+          costCategorySelectElement.appendChild(costCategoryOptionElement)
+        })
+      })
+
+
+        
+</script>

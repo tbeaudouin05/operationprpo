@@ -14,9 +14,11 @@ import (
 // it also includes potential error or form to include into the web page used to collect purchase requests
 type PurchaseRequestFormInput struct {
 	IDPurchaseRequest  string `json:"id_purchase_request"`
+	Timestamp          string `json:"timestamp"`
 	CostCenter         string `json:"cost_center"`
 	Initiator          string `json:"initiator"`
 	PrType             string `json:"pr_type"`
+	CostType           string `json:"cost_type"`
 	CostCategory       string `json:"cost_category"`
 	InvoiceNumber      string `json:"invoice_number"`
 	InvoiceDate        string `json:"invoice_date"`
@@ -48,6 +50,7 @@ func (purchaseRequestFormInput *PurchaseRequestFormInput) Validate() bool {
 		validation.Field(&purchaseRequestFormInput.CostCenter, validation.Required),
 		validation.Field(&purchaseRequestFormInput.Initiator, validation.Required),
 		validation.Field(&purchaseRequestFormInput.PrType, validation.Required),
+		validation.Field(&purchaseRequestFormInput.CostType, validation.Required),
 		validation.Field(&purchaseRequestFormInput.CostCategory, validation.Required),
 		validation.Field(&purchaseRequestFormInput.InvoiceNumber, validation.Required),
 		validation.Field(&purchaseRequestFormInput.InvoiceDate, validation.Required, validation.Date("1/2/2006")),
@@ -82,6 +85,7 @@ func (purchaseRequestFormInput *PurchaseRequestFormInput) Render(c *gin.Context,
 		`CostCenter`:         purchaseRequestFormInput.CostCenter,
 		`Initiator`:          purchaseRequestFormInput.Initiator,
 		`PrType`:             purchaseRequestFormInput.PrType,
+		`CostType`:           purchaseRequestFormInput.CostType,
 		`CostCategory`:       purchaseRequestFormInput.CostCategory,
 		`InvoiceNumber`:      purchaseRequestFormInput.InvoiceNumber,
 		`InvoiceDate`:        purchaseRequestFormInput.InvoiceDate,
@@ -105,6 +109,10 @@ func (purchaseRequestFormInput *PurchaseRequestFormInput) Render(c *gin.Context,
 	handleErr(c, err)
 }
 
+func (purchaseRequestFormInput *PurchaseRequestFormInput) ChangeQuantity(newQuantity string) {
+	purchaseRequestFormInput.Quantity = newQuantity
+}
+
 type CostCategory struct {
 	IDCostCategory string `json:"id_cost_category"`
 	Name           string `json:"name"`
@@ -118,4 +126,3 @@ func handleErr(c *gin.Context, err error) {
 		return
 	}
 }
-

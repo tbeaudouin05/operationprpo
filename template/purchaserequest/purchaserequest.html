@@ -62,11 +62,19 @@
                 <option value=""></option> 
                 <option selected="selected">{{ .CostCenter }}</option>
         </select>
-        PR Type:<select name="prType" form="purchaserequest" required>
+        PR Type (if non-quantitative, Quantity will always be 1):<select name="prType" form="purchaserequest" required>
                 <option value=""></option>
                 <option selected="selected">{{ .PrType }}</option>
                 <option value="Quantitative">Quantitative</option>
                 <option value="Non-Quantitative">Non-Quantitative</option>
+                </select>
+        Cost Type:<select name="costType" form="purchaserequest" required>
+                <option value=""></option>
+                <option selected="selected">{{ .CostType }}</option>
+                <option value="Material">Material</option>
+                <option value="Logistics">Logistics</option>
+                <option value="Labour">Labour</option>
+                <option value="Other">Other</option>
                 </select>
         Cost Category:<select id="costCategory" name="costCategory" form="purchaserequest" required>
                 <option value=""></option>
@@ -79,9 +87,9 @@
         </select>
         Vendor Name:<input type="text" name="vendorName" value="{{ .VendorName }}" required>
         Item Description:<input type="text" name="itemDescription" value="{{ .ItemDescription }}" required>
-        Unit Price IRR:<input type="number" step="0.01" min=0 name="unitPrice" value="{{ .UnitPrice }}" required>
-        VAT Unit Price IRR:<input type="number" step="0.01" min=0 name="vatUnitPrice" value="{{ .VatUnitPrice }}" required>
-        Quantity:<input type="number" step="1" min=0 name="quantity" value="{{ .Quantity }}" required>
+        Unit Price IRR (total invoice amount if non-quantitative):<input type="number" step="0.01" min=0 name="unitPrice" value="{{ .UnitPrice }}" required>
+        VAT Unit Price IRR (total VAT if non-quantitative):<input type="number" step="0.01" min=0 name="vatUnitPrice" value="{{ .VatUnitPrice }}" required>
+        Quantity (if non-quantitative, will always be 1):<input type="number" step="1" min=0 name="quantity" value="{{ .Quantity }}" required>
         Payment Term in Days:<select name="paymentTerm" form="purchaserequest" required>
                 <option value=""></option>
                 <option selected="selected">{{ .PaymentTerm }}</option>
