@@ -22,7 +22,7 @@ INSERT INTO baa_application.operation.purchase_request (
 	,fk_cost_category  
 	,invoice_number  
 	,invoice_date  
-	,vendor_name  
+	,fk_vendor  
 	,item_description  
 	,unit_price  
 	,vat_unit_price  
@@ -43,7 +43,7 @@ VALUES (@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9,@p10,@p11,@p12,@p13,@p14,@p15,@p16,'
 		purchaseRequestFormInput.CostCategory,
 		purchaseRequestFormInput.InvoiceNumber,
 		purchaseRequestFormInput.InvoiceDate,
-		purchaseRequestFormInput.VendorName,
+		purchaseRequestFormInput.FKVendor,
 		purchaseRequestFormInput.ItemDescription,
 		purchaseRequestFormInput.UnitPrice,
 		purchaseRequestFormInput.VatUnitPrice,
@@ -146,6 +146,44 @@ func GetCostCategory(dbBaa *sql.DB) []*purchaserequestforminput.CostCategory {
 	}
 
 	return costCategoryTable
+
+}
+
+func GetVendor(dbBaa *sql.DB) []*purchaserequestforminput.Vendor {
+
+	stmt, err := dbBaa.Prepare(`
+		SELECT 
+  
+		v.id_vendor
+		,v.name
+		
+	  FROM baa_application.finance.vendor v
+	 `)
+	checkError(err)
+	defer stmt.Close()
+
+	rows, err := stmt.Query()
+	checkError(err)
+	defer rows.Close()
+
+	vendorTable := []*purchaserequestforminput.Vendor{}
+
+	for rows.Next() {
+		// For each row returned by the table, create a pointer to a Vendor,
+		vendor := &purchaserequestforminput.Vendor{}
+		// Populate the attributes of the Vendor,
+		// and return incase of an error
+		err := rows.Scan(
+			&vendor.IDVendor,
+			&vendor.Name,
+		)
+		checkError(err)
+		// Finally, append the result to the returned array, and repeat for
+		// the next row
+		vendorTable = append(vendorTable, vendor)
+	}
+
+	return vendorTable
 
 }
 

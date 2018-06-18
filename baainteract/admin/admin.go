@@ -20,7 +20,7 @@ func GetPendingPurchaseRequest(dbBaa *sql.DB) []*purchaserequestforminput.Purcha
 		,pcc.name_fa cost_category  
 		,pr.invoice_number  
 		,CONVERT(VARCHAR(50), pr.invoice_date, 101) invoice_date
-		,pr.vendor_name  
+		,v.name vendor_name 
 		,pr.item_description  
     	,CAST(ROUND(pr.unit_price ,2) as numeric(36,2)) unit_price
 		,CAST(ROUND(pr.vat_unit_price ,2) as numeric(36,2)) vat_unit_price
@@ -39,6 +39,9 @@ func GetPendingPurchaseRequest(dbBaa *sql.DB) []*purchaserequestforminput.Purcha
 
 		JOIN baa_application.operation.pr_cost_category pcc
 		ON pcc.id_cost_category = pr.fk_cost_category
+
+		JOIN baa_application.finance.vendor v
+    ON pr.fk_vendor = v.id_vendor
 
 		WHERE pr.purchase_request_status = 'pending'`)
 

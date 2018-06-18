@@ -3,6 +3,7 @@ package purchaserequestform
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -54,14 +55,32 @@ func StartCostCategory(c *gin.Context) {
 	dbBaa := connectdb.ConnectToBaa()
 	defer dbBaa.Close()
 
-	costCenterTable := pr_baainteract.GetCostCategory(dbBaa)
+	costCategoryTable := pr_baainteract.GetCostCategory(dbBaa)
 
-	//Convert the `costCenterTable` variable to json
-	costCenterTableByte, err := json.Marshal(costCenterTable)
+	//Convert the `costCategoryTable` variable to json
+	costCategoryTableByte, err := json.Marshal(costCategoryTable)
 	handleErr(c, err)
 
-	// If all goes well, write the JSON list of costCenterTable to the response
-	c.Writer.Write(costCenterTableByte)
+	// If all goes well, write the JSON list of costCategoryTable to the response
+	c.Writer.Write(costCategoryTableByte)
+}
+
+// StartVendor populates the admin web page with pending purchase requests - GET request
+func StartVendor(c *gin.Context) {
+
+	// connect to Baa database
+	dbBaa := connectdb.ConnectToBaa()
+	defer dbBaa.Close()
+
+	vendorTable := pr_baainteract.GetVendor(dbBaa)
+
+	//Convert the `vendorTable` variable to json
+	vendorTableByte, err := json.Marshal(vendorTable)
+	handleErr(c, err)
+
+	log.Println(vendorTableByte)
+	// If all goes well, write the JSON list of vendorTable to the response
+	c.Writer.Write(vendorTableByte)
 }
 
 // StartAvailableCostCenter populates the admin web page with pending purchase requests - GET request
@@ -99,9 +118,11 @@ func AnswerForm(c *gin.Context) {
 		PrType:             r.FormValue(`prType`),
 		CostType:           r.FormValue(`costType`),
 		CostCategory:       r.FormValue(`costCategory`),
+		NumberOfInvoice:    r.FormValue(`numberOfInvoice`),
 		InvoiceNumber:      r.FormValue(`invoiceNumber`),
 		InvoiceDate:        r.FormValue(`invoiceDate`),
 		VendorName:         r.FormValue(`vendorName`),
+		FKVendor:           r.FormValue(`fKVendor`),
 		ItemDescription:    r.FormValue(`itemDescription`),
 		UnitPrice:          r.FormValue(`unitPrice`),
 		VatUnitPrice:       r.FormValue(`vatUnitPrice`),

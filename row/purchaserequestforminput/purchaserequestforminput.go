@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"regexp"
 
 	"github.com/gin-gonic/gin"
 	validation "github.com/go-ozzo/ozzo-validation"
@@ -21,8 +22,10 @@ type PurchaseRequestFormInput struct {
 	CostType           string `json:"cost_type"`
 	CostCategory       string `json:"cost_category"`
 	InvoiceNumber      string `json:"invoice_number"`
+	NumberOfInvoice    string `json:"number_of_invoice"`
 	InvoiceDate        string `json:"invoice_date"`
 	VendorName         string `json:"vendor_name"`
+	FKVendor           string `json:"fk_vendor"`
 	ItemDescription    string `json:"item_description"`
 	UnitPrice          string `json:"unit_price"`
 	VatUnitPrice       string `json:"vat_unit_price"`
@@ -52,9 +55,10 @@ func (purchaseRequestFormInput *PurchaseRequestFormInput) Validate() bool {
 		validation.Field(&purchaseRequestFormInput.PrType, validation.Required),
 		validation.Field(&purchaseRequestFormInput.CostType, validation.Required),
 		validation.Field(&purchaseRequestFormInput.CostCategory, validation.Required),
-		validation.Field(&purchaseRequestFormInput.InvoiceNumber, validation.Required),
+		validation.Field(&purchaseRequestFormInput.NumberOfInvoice, validation.Required),
+		validation.Field(&purchaseRequestFormInput.InvoiceNumber, validation.Required, validation.Match(regexp.MustCompile(`^[0-9s\-]{0,500}$`)).Error("must look like 1234567-1234578, no space"), validation.Length(0, 500)),
 		validation.Field(&purchaseRequestFormInput.InvoiceDate, validation.Required, validation.Date("1/2/2006")),
-		validation.Field(&purchaseRequestFormInput.VendorName, validation.Required),
+		validation.Field(&purchaseRequestFormInput.FKVendor, validation.Required),
 		validation.Field(&purchaseRequestFormInput.ItemDescription, validation.Required),
 		validation.Field(&purchaseRequestFormInput.UnitPrice, validation.Required, is.Float),
 		validation.Field(&purchaseRequestFormInput.VatUnitPrice, validation.Required, is.Float),
@@ -87,9 +91,11 @@ func (purchaseRequestFormInput *PurchaseRequestFormInput) Render(c *gin.Context,
 		`PrType`:             purchaseRequestFormInput.PrType,
 		`CostType`:           purchaseRequestFormInput.CostType,
 		`CostCategory`:       purchaseRequestFormInput.CostCategory,
+		`NumberOfInvoice`:    purchaseRequestFormInput.NumberOfInvoice,
 		`InvoiceNumber`:      purchaseRequestFormInput.InvoiceNumber,
 		`InvoiceDate`:        purchaseRequestFormInput.InvoiceDate,
 		`VendorName`:         purchaseRequestFormInput.VendorName,
+		`FKVendor`:           purchaseRequestFormInput.FKVendor,
 		`ItemDescription`:    purchaseRequestFormInput.ItemDescription,
 		`UnitPrice`:          purchaseRequestFormInput.UnitPrice,
 		`VatUnitPrice`:       purchaseRequestFormInput.VatUnitPrice,
@@ -117,6 +123,40 @@ type CostCategory struct {
 	IDCostCategory string `json:"id_cost_category"`
 	Name           string `json:"name"`
 	NameFa         string `json:"name_fa"`
+}
+
+type Vendor struct {
+	IDVendor string `json:"id_vendor"`
+	Name     string `json:"vendor_name"`
+}
+
+type FinanceTemplate struct {
+	InvoiceTotalWithVAT string `csv:"id_purchase_request"`
+	Timestamp           string `csv:"timestamp"`
+	CostCenter          string `csv:"cost_center"`
+	Initiator           string `csv:"initiator"`
+	PrType              string `csv:"pr_type"`
+	CostType            string `csv:"cost_type"`
+	CostCategory        string `csv:"cost_category"`
+	InvoiceNumber       string `csv:"invoice_number"`
+	InvoiceDate         string `csv:"invoice_date"`
+	VendorName          string `csv:"vendor_name"`
+	FKVendor            string `csv:"fk_vendor"`
+	ItemDescription     string `csv:"item_description"`
+	UnitPrice           string `csv:"unit_price"`
+	VatUnitPrice        string `csv:"vat_unit_price"`
+	Quantity            string `csv:"quantity"`
+	PaymentTerm         string `csv:"payment_term"`
+	PaymentInstallment  string `csv:"payment_installment"`
+	PaymentCenter       string `csv:"payment_center"`
+	PaymentType         string `csv:"payment_type"`
+	InvoiceTotal        string `csv:"invoice_total"`
+	VatInvoiceTotal     string `csv:"vat_invoice_total"`
+
+	IsAnotherItem string `csv:"is_another_item"`
+
+	Success string
+	Error   string
 }
 
 func handleErr(c *gin.Context, err error) {

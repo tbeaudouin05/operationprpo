@@ -1,25 +1,14 @@
-﻿CREATE TABLE baa_application.operation.purchase_request (
-  id_purchase_request INT IDENTITY(1,1) PRIMARY KEY
-  ,gfk_cost_center  VARCHAR(9) FOREIGN KEY REFERENCES baa_application.operation.func(gid_function) -- global foreign key: unique accross all divisions
-  ,initiator  VARCHAR(50)
-  ,pr_type  VARCHAR(50)
-  ,fk_cost_category  INT FOREIGN KEY REFERENCES baa_application.operation.pr_cost_category(id_cost_category)
-  ,invoice_number  VARCHAR(50)
-  ,invoice_date  DATE
-  ,vendor_name  VARCHAR(50)
-  ,item_description  VARCHAR(50)
-  ,unit_price  REAL
-  ,vat_unit_price  REAL
-  ,quantity  INTEGER
-  ,payment_term  VARCHAR(50)
-  ,payment_installment  VARCHAR(50)
-  ,payment_center  VARCHAR(50)
-  ,payment_type  VARCHAR(50)
-  ,invoice_total AS unit_price*quantity
-  ,vat_invoice_total AS vat_unit_price*quantity
-  ,purchase_request_status VARCHAR(50)
-  ,timestamp DATETIME NOT NULL DEFAULT (GETDATE())
-);
+﻿
+ALTER TABLE baa_application.operation.purchase_request
+ADD fk_vendor INT;
+
+UPDATE baa_application.operation.purchase_request
+SET fk_vendor = 1
+
+ALTER TABLE baa_application.operation.purchase_request ALTER COLUMN item_description NVARCHAR(300);
+
+ALTER TABLE baa_application.operation.purchase_request
+ADD FOREIGN KEY (fk_vendor) REFERENCES baa_application.finance.vendor(id_vendor);
 
 CREATE TABLE baa_application.operation.pr_cost_category (
   id_cost_category INT IDENTITY(1,1) PRIMARY KEY
@@ -27,6 +16,30 @@ CREATE TABLE baa_application.operation.pr_cost_category (
   ,name_fa NVARCHAR(100) NOT NULL
 );
 
+ALTER TABLE baa_application.operation.pr_cost_category
+ADD code BIGINT;
+
+DELETE FROM baa_application.operation.pr_cost_category
+WHERE id_cost_category = 30
+ 
+ALTER TABLE baa_application.operation.pr_cost_category ALTER COLUMN code BIGINT NOT NULL;
+
+ALTER TABLE baa_application.operation.pr_cost_category
+ADD UNIQUE (code);
+
+CREATE TABLE baa_application.finance.vendor (
+  id_vendor INT IDENTITY(1,1) PRIMARY KEY
+  ,name NVARCHAR(100) NOT NULL
+  ,code BIGINT NOT NULL UNIQUE
+);
+                   
+
+
+update baa_application.operation.pr_cost_category
+set pr_cost_category.code = table1.code
+from baa_application.operation.table1
+inner join baa_application.operation.pr_cost_category on
+pr_cost_category.name_fa = operation.table1.name_fa
 
 
 CREATE TABLE baa_application.operation.pr_user (
@@ -154,14 +167,22 @@ CREATE VIEW operation.cost_center_view AS
   ON  fu.gfk_department = de.gid_department
 
 
+
+
+
 INSERT INTO  baa_application.operation.pr_user (
   email
   ,name
   ,access)
 VALUES ('thomas.beaudouin@bamilo.com', 'Thomas Beaudouin', 'admin')
 
-DELETE FROM baa_application.operation.user_access
-WHERE baa_application.operation.user_access.email = 'julien.lefebvre@bamilo.com';
+DELETE FROM baa_application.operation.pr_user
+WHERE baa_application.operation.pr_user.email = 'julien.lefebvre@bamilo.com';
+
+UPDATE baa_application.operation.pr_user
+SET access = 'cc_admin'
+WHERE email = 'julien.lefebvre@bamilo.com'
+
 
 INSERT INTO baa_application.finance.division (
   id_division
@@ -197,7 +218,9 @@ INSERT INTO baa_application.operation.location (
   ,tag_code
   ) VALUES ('691001','001','Receiving','RECE','001')
 
-DELETE FROM baa_application.operation.purchase_request;
+DELETE FROM baa_application.operation.purchase_request
+WHERE initiator = 'Thomas Beaudouin'
+
 DELETE FROM baa_application.operation.user_access;
 
 DROP TABLE baa_application.operation.purchase_request;
