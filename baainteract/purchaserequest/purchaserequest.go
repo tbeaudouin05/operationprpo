@@ -20,6 +20,7 @@ INSERT INTO baa_application.operation.purchase_request (
 	,pr_type
 	,cost_type  
 	,fk_cost_category  
+	,invoice_count
 	,invoice_number  
 	,invoice_date  
 	,fk_vendor  
@@ -32,7 +33,7 @@ INSERT INTO baa_application.operation.purchase_request (
 	,payment_center   
 	,payment_type
 	,purchase_request_status) 
-VALUES (@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9,@p10,@p11,@p12,@p13,@p14,@p15,@p16,'pending')`
+VALUES (@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9,@p10,@p11,@p12,@p13,@p14,@p15,@p16,@p17,'pending')`
 	insertPurchaseRequest, err := dbBaa.Prepare(insertPurchaseRequestStr)
 
 	res, err := insertPurchaseRequest.Exec(
@@ -41,6 +42,7 @@ VALUES (@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9,@p10,@p11,@p12,@p13,@p14,@p15,@p16,'
 		purchaseRequestFormInput.PrType,
 		purchaseRequestFormInput.CostType,
 		purchaseRequestFormInput.CostCategory,
+		purchaseRequestFormInput.NumberOfInvoice,
 		purchaseRequestFormInput.InvoiceNumber,
 		purchaseRequestFormInput.InvoiceDate,
 		purchaseRequestFormInput.FKVendor,

@@ -91,7 +91,8 @@
 			<th>Initiator</th>
       <th>PR Type</th>
       <th>Cost Type</th>
-			<th>Cost Category</th>
+      <th>Cost Category</th>
+      <th>Number of Invoices</th>
 			<th>Invoice Number</th>
 			<th>Invoice Date</th>
 			<th>Vendor Name</th>	
@@ -157,6 +158,8 @@ iDPurchaseRequestSelectElement = document.querySelector("#admin > select:nth-chi
           cost_type.innerHTML = templateParameter.cost_type
           cost_category = document.createElement("td")
           cost_category.innerHTML = templateParameter.cost_category
+          number_of_invoice = document.createElement("td")
+          number_of_invoice.innerHTML = templateParameter.number_of_invoice
           invoice_number = document.createElement("td")
           invoice_number.innerHTML = templateParameter.invoice_number
           invoice_date = document.createElement("td")
@@ -192,6 +195,7 @@ iDPurchaseRequestSelectElement = document.querySelector("#admin > select:nth-chi
           row.appendChild(pr_type)
           row.appendChild(cost_type)
           row.appendChild(cost_category)
+          row.appendChild(number_of_invoice)
           row.appendChild(invoice_number)
           row.appendChild(invoice_date)
           row.appendChild(vendor_name)
