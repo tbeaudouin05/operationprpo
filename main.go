@@ -9,6 +9,7 @@ import (
 	"github.com/thomas-bamilo/operation/operationprpo/api/admin"
 	"github.com/thomas-bamilo/operation/operationprpo/api/admin/addcostcenter"
 	"github.com/thomas-bamilo/operation/operationprpo/api/admin/adduser"
+	"github.com/thomas-bamilo/operation/operationprpo/api/admin/financetemplate"
 	"github.com/thomas-bamilo/operation/operationprpo/api/homepage"
 	"github.com/thomas-bamilo/operation/operationprpo/api/oauth/authenticate"
 	"github.com/thomas-bamilo/operation/operationprpo/api/oauth/login"
@@ -26,8 +27,6 @@ func main() {
 		Path:   `/`,
 		MaxAge: 86400 * 7,
 	})
-
-	// ALL THAT IS LEFT IS ADDING THE API CALL TO THIS PAGE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	// using the cookie store:
 	router.Use(sessions.Sessions(`goquestsession`, store))
@@ -49,6 +48,12 @@ func main() {
 	router.GET(`/admin/startformidpurchaserequest`, admin.StartIDPurchaseRequest)
 	router.GET(`/admin/startpendingpurchaserequest`, admin.StartPendingPurchaseRequest)
 	router.POST(`/admin`, admin.AcceptRejectPurchaseRequest)
+
+	router.GET(`/admin/financetemplate`, financetemplate.Start)
+	router.GET(`/admin/financetemplatesuccess`, financetemplate.StartSuccess)
+	router.GET(`/admin/startapprovedpurchaserequest`, financetemplate.StartApprovedPurchaseRequest)
+	router.POST(`/admin/financetemplateform`, financetemplate.FinanceTemplateForm)
+	router.GET(`/admin/downloadfinancetemplate`, financetemplate.DownloadFinanceTemplate)
 
 	router.GET(`/admin/adduser`, adduser.Start)
 	// add user access

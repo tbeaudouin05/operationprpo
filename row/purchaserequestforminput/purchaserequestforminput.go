@@ -130,35 +130,6 @@ type Vendor struct {
 	Name     string `json:"vendor_name"`
 }
 
-type FinanceTemplate struct {
-	InvoiceTotalWithVAT string `csv:"id_purchase_request"`
-	Timestamp           string `csv:"timestamp"`
-	CostCenter          string `csv:"cost_center"`
-	Initiator           string `csv:"initiator"`
-	PrType              string `csv:"pr_type"`
-	CostType            string `csv:"cost_type"`
-	CostCategory        string `csv:"cost_category"`
-	InvoiceNumber       string `csv:"invoice_number"`
-	InvoiceDate         string `csv:"invoice_date"`
-	VendorName          string `csv:"vendor_name"`
-	FKVendor            string `csv:"fk_vendor"`
-	ItemDescription     string `csv:"item_description"`
-	UnitPrice           string `csv:"unit_price"`
-	VatUnitPrice        string `csv:"vat_unit_price"`
-	Quantity            string `csv:"quantity"`
-	PaymentTerm         string `csv:"payment_term"`
-	PaymentInstallment  string `csv:"payment_installment"`
-	PaymentCenter       string `csv:"payment_center"`
-	PaymentType         string `csv:"payment_type"`
-	InvoiceTotal        string `csv:"invoice_total"`
-	VatInvoiceTotal     string `csv:"vat_invoice_total"`
-
-	IsAnotherItem string `csv:"is_another_item"`
-
-	Success string
-	Error   string
-}
-
 func handleErr(c *gin.Context, err error) {
 	if err != nil {
 		fmt.Println(fmt.Errorf(`Error: %v`, err))

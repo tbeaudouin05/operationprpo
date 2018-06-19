@@ -1,14 +1,16 @@
-﻿
-ALTER TABLE baa_application.operation.purchase_request
-ADD fk_vendor INT;
+﻿ALTER TABLE baa_application.operation.purchase_request
+ADD invoice_count INT;
 
 UPDATE baa_application.operation.purchase_request
-SET fk_vendor = 1
+SET invoice_count = 1
 
 ALTER TABLE baa_application.operation.purchase_request ALTER COLUMN item_description NVARCHAR(300);
 
 ALTER TABLE baa_application.operation.purchase_request
 ADD FOREIGN KEY (fk_vendor) REFERENCES baa_application.finance.vendor(id_vendor);
+
+ALTER TABLE baa_application.operation.purchase_request
+ADD UNIQUE(fk_vendor);
 
 CREATE TABLE baa_application.operation.pr_cost_category (
   id_cost_category INT IDENTITY(1,1) PRIMARY KEY

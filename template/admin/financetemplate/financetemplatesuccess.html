@@ -4,6 +4,70 @@
 <head>
   <style>
 
+* {
+    box-sizing: border-box;
+}
+
+input[type=text], select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+label {
+    padding: 12px 12px 12px 0;
+    display: inline-block;
+}
+
+input[type=submit] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+}
+
+input[type=submit]:hover {
+    background-color: #45a049;
+}
+
+.container {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+}
+
+.col-25 {
+    float: left;
+    width: 25%;
+    margin-top: 6px;
+}
+
+.col-75 {
+    float: left;
+    width: 75%;
+    margin-top: 6px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+    .col-25, .col-75, input[type=submit] {
+        width: 100%;
+        margin-top: 0;
+    }
+}
+
   table tr:nth-child(even) {
   background-color: #eee;
   }
@@ -52,7 +116,9 @@
             padding: 10px;
         }
     </style>
- <title>Pending Purchase Requests</title>
+ <style type="text/css">.error {color: red;}</style>
+ <style type="text/css">.success {color: green;}</style>
+
 </head>
 
 <body>
@@ -64,26 +130,39 @@
             <p><a href="../admin/adduser" >Add user</a></p>
         </li>
     </ul>
-    <form action="/admin/downloadfinancetemplate" method="get">
-        <button type="submit">Download Finance template</button>
-    </form>
 
-  <h1>Pending Purchase Requests</h1>
-  <form action="/admin" id="admin" method="post">
-  ID of Purchase Request:<select name="iDPurchaseRequest" form="admin">
-      <option value=""></option>
-      </select>
-  Accept or Reject? <select name="acceptReject" form="admin">
-      <option value=""></option>
-      <option value="Accept">Accept</option>
-      <option value="Reject">Reject</option>
-      </select>
-  <button type="submit"> Submit </button>
-  </form>
-  <!-- 
-    This section of the document specifies the table that will
-    be used to display the list of birds and their description
-   -->
+    <h1>Download Finance Template</h1>
+
+    <div>
+      <p class="success" >Finance Template successfully downloaded!</p>
+      </div>
+      
+      <div class="container">
+          <form action="/admin/financetemplateform" id="financetemplateform" method="post">
+          <div class="row">
+            <div class="col-25">
+              <label for="StartDate">Start Date</label>
+            </div>
+            <div class="col-75">
+                  <input type="date" name="StartDate" value="{{ .StartDate }}" required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-25">
+              <label for="EndDate">End Date</label>
+            </div>
+            <div class="col-75">
+              <input type="date" name="EndDate" value="{{ .EndDate }}" required>
+            </div>
+          </div>
+          <div class="row">
+              <button type="submit">Download Finance template</button>
+          </div>
+        </form>
+        <form action="/admin/downloadfinancetemplate" id="downloadfinancetemplate" method="get"></form>
+      </div>
+      
+    <h1>Approved Purchase Requests</h1>
   <table>
     <tr>
       <th>ID Purchase Request</th>
@@ -110,33 +189,14 @@
     </tr>
   </table>
 
-  <!-- 
-    Finally, the last section is the script that will
-    run on each page load to fetch the list of birds
-    and add them to our existing table
-   -->
+
   <script>
 
-iDPurchaseRequestSelectElement = document.querySelector("#admin > select:nth-child(1)")
-      fetch("/admin/startformidpurchaserequest")
-      .then(iDPurchaseRequestTableByte => iDPurchaseRequestTableByte.json())
-      .then(iDPurchaseRequestTableJSON => {
-        //Once we fetch the list, we iterate over it
-        iDPurchaseRequestTableJSON.forEach(iDPurchaseRequest => {
-
-          // create the <option> element and fill it
-          iDPurchaseRequestOptionElement = document.createElement("option")
-          iDPurchaseRequestOptionElement.value = iDPurchaseRequest
-          iDPurchaseRequestOptionElement.innerHTML = iDPurchaseRequest
-
-          // Finally, add the option element to the select element itself
-          iDPurchaseRequestSelectElement.appendChild(iDPurchaseRequestOptionElement)
-        })
-      })
-
-
+    
+    document.getElementById("downloadfinancetemplate").submit();
+    
     purchaseRequestTable = document.querySelector("table")
-    fetch("/admin/startpendingpurchaserequest")
+    fetch("/admin/startapprovedpurchaserequest")
       .then(response => response.json())
       .then(templateParameterTable => {
         //Once we fetch the list, we iterate over it
