@@ -57,6 +57,7 @@ INSERT INTO  baa_application.operation.pr_user (
   ,access)
 VALUES ('julien.lefebvre@bamilo.com', 'Julien Lefebvre', 'pr_admin')
 
+
 CREATE TABLE baa_application.operation.pr_department_access (
   id_department_access INT IDENTITY(1,1) PRIMARY KEY
   ,fk_user INT FOREIGN KEY REFERENCES baa_application.operation.pr_user(id_user)

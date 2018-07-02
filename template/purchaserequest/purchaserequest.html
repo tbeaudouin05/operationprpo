@@ -213,8 +213,8 @@
       /*for each item in the array...*/
       for (i = 0; i < arrName.length; i++) {
         /*check if the item starts with the same letters as the text field value:*/
-        //a.innerHTML.toUpperCase().indexOf(filter) > -1: can use this to improve search especially in farsi
-        if (arrName[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+        // arrName[i].substr(0, val.length).toUpperCase() == val.toUpperCase() : can use this to revert old filter
+        if (arrName[i].toUpperCase().indexOf(val.toUpperCase()) > -1) {
           /*create a DIV element for each matching element:*/
           b = document.createElement("DIV");
           /*make the matching letters bold:*/
